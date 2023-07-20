@@ -31,5 +31,14 @@ lines_between_types = 0
 use_parentheses = true
 remove_redundant_aliases = true
 default_section = "THIRDPARTY"
-known_third_party = [ "mathematical", "scipy",]
+known_third_party = [
+    "domdf_python_tools",
+    "mathematical",
+    "numpy",
+    "pandas",
+    "pymassspec",
+    "pyms_nist_search",
+    "scipy",
+    "sdjson",
+]
 known_first_party = "libgunshotmatch"

@@ -37,7 +37,7 @@ platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
 
 [tool.importcheck]
-always = [ "libgunshotmatch", "libgunshotmatch.utils",]
+always = [ "libgunshotmatch", "libgunshotmatch.utils", "libgunshotmatch.peak",]
 
 [tool.mypy]
 python_version = "3.8"
@@ -135,6 +135,9 @@ order = 10
 [tool.dependency-dash."doc-source/requirements.txt"]
 order = 30
 include = false
+
+[tool.dep_checker.name_mapping]
+pymassspec = "pyms"
 
 [tool.snippet-fmt.languages.python]
 reformat = true
