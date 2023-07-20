@@ -30,51 +30,51 @@ libgunshotmatch
 	:target: https://libgunshotmatch.readthedocs.io/en/latest
 	:alt: Documentation Build Status
 
-.. |docs_check| image:: https://github.com/domdfcoding/libgunshotmatch/workflows/Docs%20Check/badge.svg
-	:target: https://github.com/domdfcoding/libgunshotmatch/actions?query=workflow%3A%22Docs+Check%22
+.. |docs_check| image:: https://github.com/GunShotMatch/libgunshotmatch/workflows/Docs%20Check/badge.svg
+	:target: https://github.com/GunShotMatch/libgunshotmatch/actions?query=workflow%3A%22Docs+Check%22
 	:alt: Docs Check Status
 
-.. |actions_linux| image:: https://github.com/domdfcoding/libgunshotmatch/workflows/Linux/badge.svg
-	:target: https://github.com/domdfcoding/libgunshotmatch/actions?query=workflow%3A%22Linux%22
+.. |actions_linux| image:: https://github.com/GunShotMatch/libgunshotmatch/workflows/Linux/badge.svg
+	:target: https://github.com/GunShotMatch/libgunshotmatch/actions?query=workflow%3A%22Linux%22
 	:alt: Linux Test Status
 
-.. |actions_windows| image:: https://github.com/domdfcoding/libgunshotmatch/workflows/Windows/badge.svg
-	:target: https://github.com/domdfcoding/libgunshotmatch/actions?query=workflow%3A%22Windows%22
+.. |actions_windows| image:: https://github.com/GunShotMatch/libgunshotmatch/workflows/Windows/badge.svg
+	:target: https://github.com/GunShotMatch/libgunshotmatch/actions?query=workflow%3A%22Windows%22
 	:alt: Windows Test Status
 
-.. |actions_macos| image:: https://github.com/domdfcoding/libgunshotmatch/workflows/macOS/badge.svg
-	:target: https://github.com/domdfcoding/libgunshotmatch/actions?query=workflow%3A%22macOS%22
+.. |actions_macos| image:: https://github.com/GunShotMatch/libgunshotmatch/workflows/macOS/badge.svg
+	:target: https://github.com/GunShotMatch/libgunshotmatch/actions?query=workflow%3A%22macOS%22
 	:alt: macOS Test Status
 
-.. |actions_flake8| image:: https://github.com/domdfcoding/libgunshotmatch/workflows/Flake8/badge.svg
-	:target: https://github.com/domdfcoding/libgunshotmatch/actions?query=workflow%3A%22Flake8%22
+.. |actions_flake8| image:: https://github.com/GunShotMatch/libgunshotmatch/workflows/Flake8/badge.svg
+	:target: https://github.com/GunShotMatch/libgunshotmatch/actions?query=workflow%3A%22Flake8%22
 	:alt: Flake8 Status
 
-.. |actions_mypy| image:: https://github.com/domdfcoding/libgunshotmatch/workflows/mypy/badge.svg
-	:target: https://github.com/domdfcoding/libgunshotmatch/actions?query=workflow%3A%22mypy%22
+.. |actions_mypy| image:: https://github.com/GunShotMatch/libgunshotmatch/workflows/mypy/badge.svg
+	:target: https://github.com/GunShotMatch/libgunshotmatch/actions?query=workflow%3A%22mypy%22
 	:alt: mypy status
 
-.. |requires| image:: https://dependency-dash.repo-helper.uk/github/domdfcoding/libgunshotmatch/badge.svg
-	:target: https://dependency-dash.repo-helper.uk/github/domdfcoding/libgunshotmatch/
+.. |requires| image:: https://dependency-dash.repo-helper.uk/github/GunShotMatch/libgunshotmatch/badge.svg
+	:target: https://dependency-dash.repo-helper.uk/github/GunShotMatch/libgunshotmatch/
 	:alt: Requirements Status
 
-.. |codefactor| image:: https://img.shields.io/codefactor/grade/github/domdfcoding/libgunshotmatch?logo=codefactor
-	:target: https://www.codefactor.io/repository/github/domdfcoding/libgunshotmatch
+.. |codefactor| image:: https://img.shields.io/codefactor/grade/github/GunShotMatch/libgunshotmatch?logo=codefactor
+	:target: https://www.codefactor.io/repository/github/GunShotMatch/libgunshotmatch
 	:alt: CodeFactor Grade
 
-.. |license| image:: https://img.shields.io/github/license/domdfcoding/libgunshotmatch
-	:target: https://github.com/domdfcoding/libgunshotmatch/blob/master/LICENSE
+.. |license| image:: https://img.shields.io/github/license/GunShotMatch/libgunshotmatch
+	:target: https://github.com/GunShotMatch/libgunshotmatch/blob/master/LICENSE
 	:alt: License
 
-.. |language| image:: https://img.shields.io/github/languages/top/domdfcoding/libgunshotmatch
+.. |language| image:: https://img.shields.io/github/languages/top/GunShotMatch/libgunshotmatch
 	:alt: GitHub top language
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/domdfcoding/libgunshotmatch/v0.0.0
-	:target: https://github.com/domdfcoding/libgunshotmatch/pulse
+.. |commits-since| image:: https://img.shields.io/github/commits-since/GunShotMatch/libgunshotmatch/v0.0.0
+	:target: https://github.com/GunShotMatch/libgunshotmatch/pulse
 	:alt: GitHub commits since tagged version
 
-.. |commits-latest| image:: https://img.shields.io/github/last-commit/domdfcoding/libgunshotmatch
-	:target: https://github.com/domdfcoding/libgunshotmatch/commit/master
+.. |commits-latest| image:: https://img.shields.io/github/last-commit/GunShotMatch/libgunshotmatch
+	:target: https://github.com/GunShotMatch/libgunshotmatch/commit/master
 	:alt: GitHub last commit
 
 .. |maintained| image:: https://img.shields.io/maintenance/yes/2023
@@ -93,6 +93,6 @@ To install with ``pip``:
 
 .. code-block:: bash
 
-	$ python -m pip install git+https://github.com/domdfcoding/libgunshotmatch
+	$ python -m pip install git+https://github.com/GunShotMatch/libgunshotmatch
 
 .. end installation

@@ -3,13 +3,13 @@ Downloading source code
 =========================
 
 The ``libgunshotmatch`` source code is available on GitHub,
-and can be accessed from the following URL: https://github.com/domdfcoding/libgunshotmatch
+and can be accessed from the following URL: https://github.com/GunShotMatch/libgunshotmatch
 
 If you have ``git`` installed, you can clone the repository with the following command:
 
 .. prompt:: bash
 
-	git clone https://github.com/domdfcoding/libgunshotmatch
+	git clone https://github.com/GunShotMatch/libgunshotmatch
 
 .. parsed-literal::
 

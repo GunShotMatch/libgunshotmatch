@@ -19,9 +19,9 @@ email = "dominic@davis-foster.co.uk"
 file = "LICENSE"
 
 [project.urls]
-Homepage = "https://github.com/domdfcoding/libgunshotmatch"
-"Issue Tracker" = "https://github.com/domdfcoding/libgunshotmatch/issues"
-"Source Code" = "https://github.com/domdfcoding/libgunshotmatch"
+Homepage = "https://github.com/GunShotMatch/libgunshotmatch"
+"Issue Tracker" = "https://github.com/GunShotMatch/libgunshotmatch/issues"
+"Source Code" = "https://github.com/GunShotMatch/libgunshotmatch"
 Documentation = "https://libgunshotmatch.readthedocs.io/en/latest"
 
 [tool.whey]
@@ -46,7 +46,7 @@ show_error_codes = true
 directives = [ "code-block",]
 
 [tool.sphinx-pyproject]
-github_username = "domdfcoding"
+github_username = "GunShotMatch"
 github_repository = "libgunshotmatch"
 author = "Dominic Davis-Foster"
 project = "libgunshotmatch"

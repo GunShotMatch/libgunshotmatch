@@ -56,8 +56,8 @@ libgunshotmatch
 		:workflow: mypy
 		:alt: mypy status
 
-	.. |requires| image:: https://dependency-dash.repo-helper.uk/github/domdfcoding/libgunshotmatch/badge.svg
-		:target: https://dependency-dash.repo-helper.uk/github/domdfcoding/libgunshotmatch/
+	.. |requires| image:: https://dependency-dash.repo-helper.uk/github/GunShotMatch/libgunshotmatch/badge.svg
+		:target: https://dependency-dash.repo-helper.uk/github/GunShotMatch/libgunshotmatch/
 		:alt: Requirements Status
 
 	.. |codefactor| codefactor-shield::
@@ -122,7 +122,6 @@ Contents
 .. sidebar-links::
 	:caption: Links
 	:github:
-	:pypi: highlight
 
 
 .. start links
@@ -131,6 +130,6 @@ Contents
 
 	View the :ref:`Function Index <genindex>` or browse the `Source Code <_modules/index.html>`__.
 
-	:github:repo:`Browse the GitHub Repository <domdfcoding/libgunshotmatch>`
+	:github:repo:`Browse the GitHub Repository <GunShotMatch/libgunshotmatch>`
 
 .. end links
