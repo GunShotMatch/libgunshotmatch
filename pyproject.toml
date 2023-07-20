@@ -25,7 +25,12 @@ Homepage = "https://github.com/GunShotMatch/libgunshotmatch"
 Documentation = "https://libgunshotmatch.readthedocs.io/en/latest"
 
 [tool.whey]
-base-classifiers = []
+base-classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
 python-versions = [ "3.8", "3.9", "3.10", "3.11",]
 python-implementations = [ "CPython",]
 platforms = [ "Windows", "macOS", "Linux",]

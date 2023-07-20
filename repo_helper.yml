@@ -24,3 +24,8 @@ python_versions:
 
 sphinx_html_theme: furo
 standalone_contrib_guide: true
+
+classifiers:
+ - 'Development Status :: 3 - Alpha'
+ - 'Intended Audience :: Developers'
+ - 'Topic :: Software Development :: Libraries :: Python Modules'
