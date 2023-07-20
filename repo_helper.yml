@@ -7,11 +7,10 @@ email: 'dominic@davis-foster.co.uk'
 username: 'domdfcoding'
 version: '0.0.0'
 license: 'MIT'
-short_desc: 'Base library for GunShotMatch '
+short_desc: 'Base library for GunShotMatch.'
 
 enable_conda: false
 enable_tests: false
-enable_docs: false
 on_pypi: false
 
 use_whey: true
@@ -21,3 +20,6 @@ python_versions:
  3.9:
  "3.10":
  "3.11":
+
+sphinx_html_theme: furo
+standalone_contrib_guide: true

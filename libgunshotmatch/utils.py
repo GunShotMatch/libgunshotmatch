@@ -1,0 +1,77 @@
+#!/usr/bin/env python3
+#
+#  utils.py
+"""
+Utility functions.
+"""
+#
+#  Copyright © 2020-2023 Dominic Davis-Foster <dominic@davis-foster.co.uk>
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included in all
+#  copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+#  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+#  DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+#  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
+#  OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
+# stdlib
+from decimal import Decimal
+from typing import Optional, Sequence, Union
+
+# 3rd party
+from mathematical.utils import rounders
+from scipy.stats import truncnorm  # type: ignore[import]
+
+__all__ = ("round_rt", "get_truncated_normal")
+
+
+def round_rt(rt: Union[str, float, Decimal]) -> Decimal:
+	"""
+	Truncate precision of retention time to 10 decimal places.
+
+	:param rt:
+	"""
+
+	# Limit to 10 decimal places as that's what Pandas writes JSON data as;
+	# no need for greater precision.
+
+	return rounders(rt, "0.0000000000")
+
+
+def get_truncated_normal(
+		mean: float,
+		sd: float,
+		low: float = 0,
+		upp: float = 10,
+		count: int = 10,
+		random_state: Optional[int] = None,
+		) -> Sequence[float]:
+	"""
+	Returns ``count`` values from a truncated normal distrubition.
+
+	:param mean: The midpoint of the normal distribution.
+	:param sd: The spread of the normal distribution (the standard deviation).
+	:param low: The lower bound.
+	:param upp: The upper bound.
+	:param count:
+	:param random_state: Optional seed for the random number generator.
+	"""
+
+	# From https://stackoverflow.com/a/74448424
+	# By toco_tico https://stackoverflow.com/users/1060349/toto-tico
+	# CC BY-SA 4.0
+
+	dist = truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
+	return dist.rvs(count, random_state=random_state)

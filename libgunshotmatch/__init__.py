@@ -2,7 +2,7 @@
 #
 #  __init__.py
 """
-Base library for GunShotMatch
+Base library for GunShotMatch.
 """
 #
 #  Copyright © 2020-2023 Dominic Davis-Foster <dominic@davis-foster.co.uk>
