@@ -68,12 +68,12 @@ class QualifiedPeak(Peak):
 		is in minutes; if :py:obj:`False` retention time is in seconds.
 	:param outlier: Whether the peak is an outlier.
 	:param hits: List of possible identities for the peak.
-	:param peak_number: Optional numerical identifier for the peak, such as in an :class:`~.Alignment`.
+	:param peak_number: Optional numerical identifier for the :class:`~pyms.Peak.Class.Peak`, such as in an :class:`~.pyms.DPA.Alignment.Alignment`.
 	"""
 
 	#: List of possible identities for the peak.
 	hits: List[SearchResult]
-	#: Optional numerical identifier for the peak, such as in an :class:`~.Alignment`.
+	#: Optional numerical identifier for the peak, such as in an :class:`~.pyms.DPA.Alignment.Alignment`.
 	peak_number: Optional[int]
 
 	def __init__(
@@ -133,7 +133,7 @@ class QualifiedPeak(Peak):
 	@classmethod
 	def from_peak(cls: Type["QualifiedPeak"], peak: Peak) -> "QualifiedPeak":
 		"""
-		Construct :class:`~.QualifiedPeak` from a :class:`~.Peak`.
+		Construct :class:`~.QualifiedPeak` from a :class:`~pyms.Peak.Class.Peak`.
 
 		The resulting :class:`~.QualifiedPeak` will not have :attr:`~.hits` or :attr:`~.peak_number` set,
 		but those attributes can be set after calling this method.
@@ -480,7 +480,7 @@ def filter_aligned_peaks(
 
 def peak_from_dict(d: Dict[str, Any]) -> Peak:
 	"""
-	Construct a :class:`~.Peak` from a dictionary.
+	Construct a :class:`~pyms.Peak.Class.Peak` from a dictionary.
 
 	:param d:
 	"""
@@ -493,3 +493,14 @@ def peak_from_dict(d: Dict[str, Any]) -> Peak:
 		peak_obj.ion_areas = d["ion_areas"]
 
 	return peak_obj
+
+
+def _to_peak_list(a_list: List[Peak]) -> PeakList:
+	"""
+	Internal utility to coerce a list of peaks to an actual :class:`~.PeakList`.
+	"""
+
+	if isinstance(a_list, PeakList):
+		return a_list
+	else:
+		return PeakList(a_list)

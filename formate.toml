@@ -32,7 +32,9 @@ use_parentheses = true
 remove_redundant_aliases = true
 default_section = "THIRDPARTY"
 known_third_party = [
+    "attrs",
     "domdf_python_tools",
+    "enum_tools",
     "mathematical",
     "numpy",
     "pandas",

@@ -37,7 +37,7 @@ platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
 
 [tool.importcheck]
-always = [ "libgunshotmatch", "libgunshotmatch.utils", "libgunshotmatch.peak",]
+always = [ "libgunshotmatch", "libgunshotmatch.utils", "libgunshotmatch.peak", "libgunshotmatch.datafile",]
 
 [tool.mypy]
 python_version = "3.8"
@@ -79,6 +79,9 @@ extensions = [
     "sphinx_licenseinfo",
     "seed_intersphinx_mapping",
     "html_section",
+    "enum_tools.autoenum",
+    "attr_utils.autoattrs",
+    "remove_factory_defaults",
 ]
 sphinxemoji_style = "twemoji"
 gitstamp_fmt = "%d %b %Y"
@@ -137,6 +140,7 @@ order = 30
 include = false
 
 [tool.dep_checker.name_mapping]
+attrs = "attr"
 pymassspec = "pyms"
 
 [tool.snippet-fmt.languages.python]

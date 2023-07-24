@@ -29,3 +29,11 @@ classifiers:
  - 'Development Status :: 3 - Alpha'
  - 'Intended Audience :: Developers'
  - 'Topic :: Software Development :: Libraries :: Python Modules'
+
+extra_sphinx_extensions:
+  - enum_tools.autoenum
+  - attr_utils.autoattrs
+  - remove_factory_defaults
+
+sphinx_conf_epilogue:
+  - nitpicky = True
