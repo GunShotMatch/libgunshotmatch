@@ -37,7 +37,13 @@ platforms = [ "Windows", "macOS", "Linux",]
 license-key = "MIT"
 
 [tool.importcheck]
-always = [ "libgunshotmatch", "libgunshotmatch.utils", "libgunshotmatch.peak", "libgunshotmatch.datafile",]
+always = [
+    "libgunshotmatch",
+    "libgunshotmatch.utils",
+    "libgunshotmatch.peak",
+    "libgunshotmatch.datafile",
+    "libgunshotmatch.search",
+]
 
 [tool.mypy]
 python_version = "3.8"
