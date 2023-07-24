@@ -274,9 +274,6 @@ class Datafile:
 		:param d:
 		"""
 
-		date_created = datetime.fromisoformat(d["date_created"])
-		date_modified = datetime.fromisoformat(d["date_modified"])
-
 		im_as_dict = d["intensity_matrix"]
 		if im_as_dict is None:
 			intensity_matrix = None
@@ -287,17 +284,25 @@ class Datafile:
 					intensity_array=im_as_dict["intensities"],
 					)
 
+		optional_keys = {}
+		if "user" in d:
+			optional_keys["user"] = d["user"]
+		if "device" in d:
+			optional_keys["device"] = d["device"]
+		if "date_created" in d:
+			optional_keys["date_created"] = datetime.fromisoformat(d["date_created"])
+		if "date_modified" in d:
+			optional_keys["date_modified"] = datetime.fromisoformat(d["date_modified"])
+		if "version" in d:
+			optional_keys["version"] = d["version"]
+
 		return cls(
 				name=d["name"],
-				user=d["user"],
-				device=d["device"],
-				date_created=date_created,
-				date_modified=date_modified,
-				version=d["version"],
 				original_filename=d["original_filename"],
 				original_filetype=FileType(d["original_filetype"]),
 				description=d["description"],
 				intensity_matrix=intensity_matrix,
+				**optional_keys,
 				)
 
 	def export(self, output_dir: PathLike) -> str:
@@ -441,9 +446,6 @@ class Repeat:
 		:param d:
 		"""
 
-		date_created = datetime.fromisoformat(d["date_created"])
-		date_modified = datetime.fromisoformat(d["date_modified"])
-
 		datafile = Datafile.from_dict(d["datafile"])
 
 		peaks = PeakList(peak_from_dict(peak) for peak in d["peaks"])
@@ -454,13 +456,21 @@ class Repeat:
 		else:
 			qualified_peaks = [QualifiedPeak.from_dict(peak) for peak in d["qualified_peaks"]]
 
+		optional_keys = {}
+		if "user" in d:
+			optional_keys["user"] = d["user"]
+		if "device" in d:
+			optional_keys["device"] = d["device"]
+		if "date_created" in d:
+			optional_keys["date_created"] = datetime.fromisoformat(d["date_created"])
+		if "date_modified" in d:
+			optional_keys["date_modified"] = datetime.fromisoformat(d["date_modified"])
+		if "version" in d:
+			optional_keys["version"] = d["version"]
+
 		return cls(
 				datafile=datafile,
 				peaks=peaks,
 				qualified_peaks=qualified_peaks,
-				user=d["user"],
-				device=d["device"],
-				date_created=date_created,
-				date_modified=date_modified,
-				version=d["version"],
+				**optional_keys,
 				)
