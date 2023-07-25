@@ -39,10 +39,12 @@ license-key = "MIT"
 [tool.importcheck]
 always = [
     "libgunshotmatch",
-    "libgunshotmatch.utils",
-    "libgunshotmatch.peak",
+    "libgunshotmatch.consolidate",
     "libgunshotmatch.datafile",
+    "libgunshotmatch.method",
+    "libgunshotmatch.peak",
     "libgunshotmatch.search",
+    "libgunshotmatch.utils",
 ]
 
 [tool.mypy]
@@ -138,16 +140,19 @@ autodoc_exclude_members = [
     "__hash__",
 ]
 
+[tool.dep_checker]
+allowed_unused = "tomli"
+
+[tool.dep_checker.name_mapping]
+attrs = "attr"
+pymassspec = "pyms"
+
 [tool.dependency-dash."requirements.txt"]
 order = 10
 
 [tool.dependency-dash."doc-source/requirements.txt"]
 order = 30
 include = false
-
-[tool.dep_checker.name_mapping]
-attrs = "attr"
-pymassspec = "pyms"
 
 [tool.snippet-fmt.languages.python]
 reformat = true
