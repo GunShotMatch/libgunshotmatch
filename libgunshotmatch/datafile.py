@@ -239,7 +239,7 @@ class Datafile:
 
 	def to_dict(self) -> Dict[str, Any]:
 		"""
-		Returns a dictionary representation of this Datafile.
+		Returns a dictionary representation of this :class:`~.Datafile`.
 
 		All keys are native, JSON-serializable, Python objects.
 		"""
