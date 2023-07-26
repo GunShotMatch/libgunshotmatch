@@ -27,7 +27,7 @@ Classes representing peaks, and functions for peak filtering.
 #
 
 # stdlib
-from typing import Any, Dict, List, Optional, Sequence, Type
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Type
 
 # 3rd party
 import numpy
@@ -189,7 +189,7 @@ class QualifiedPeak(Peak):
 				}
 
 	@classmethod
-	def from_dict(cls: Type["QualifiedPeak"], d: Dict[str, Any]) -> "QualifiedPeak":
+	def from_dict(cls: Type["QualifiedPeak"], d: Mapping[str, Any]) -> "QualifiedPeak":
 		"""
 		Construct a :class:`~.QualifiedPeak` from a dictionary.
 

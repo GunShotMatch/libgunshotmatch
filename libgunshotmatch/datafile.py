@@ -32,7 +32,7 @@ import os
 import socket
 from datetime import datetime
 from statistics import mean, median
-from typing import Any, Dict, List, NamedTuple, Optional, Tuple, Type
+from typing import Any, Dict, List, Mapping, NamedTuple, Optional, Tuple, Type
 
 # 3rd party
 import attr
@@ -267,7 +267,7 @@ class Datafile:
 				}
 
 	@classmethod
-	def from_dict(cls: Type["Datafile"], d: Dict[str, Any]) -> "Datafile":
+	def from_dict(cls: Type["Datafile"], d: Mapping[str, Any]) -> "Datafile":
 		"""
 		Construct a :class:`~.Datafile` from a dictionary.
 
@@ -439,7 +439,7 @@ class Repeat:
 				}
 
 	@classmethod
-	def from_dict(cls: Type["Repeat"], d: Dict[str, Any]) -> "Repeat":
+	def from_dict(cls: Type["Repeat"], d: Mapping[str, Any]) -> "Repeat":
 		"""
 		Construct a :class:`~.Repeat` from a dictionary.
 
