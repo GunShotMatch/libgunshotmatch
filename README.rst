@@ -19,8 +19,10 @@ libgunshotmatch
 	  - |docs| |docs_check|
 	* - Tests
 	  - |actions_linux| |actions_windows| |actions_macos|
+	* - PyPI
+	  - |pypi-version| |supported-versions| |supported-implementations| |wheel|
 	* - Activity
-	  - |commits-latest| |commits-since| |maintained|
+	  - |commits-latest| |commits-since| |maintained| |pypi-downloads|
 	* - QA
 	  - |codefactor| |actions_flake8| |actions_mypy|
 	* - Other
@@ -62,6 +64,22 @@ libgunshotmatch
 	:target: https://www.codefactor.io/repository/github/GunShotMatch/libgunshotmatch
 	:alt: CodeFactor Grade
 
+.. |pypi-version| image:: https://img.shields.io/pypi/v/libgunshotmatch
+	:target: https://pypi.org/project/libgunshotmatch/
+	:alt: PyPI - Package Version
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/libgunshotmatch?logo=python&logoColor=white
+	:target: https://pypi.org/project/libgunshotmatch/
+	:alt: PyPI - Supported Python Versions
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/libgunshotmatch
+	:target: https://pypi.org/project/libgunshotmatch/
+	:alt: PyPI - Supported Implementations
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/libgunshotmatch
+	:target: https://pypi.org/project/libgunshotmatch/
+	:alt: PyPI - Wheel
+
 .. |license| image:: https://img.shields.io/github/license/GunShotMatch/libgunshotmatch
 	:target: https://github.com/GunShotMatch/libgunshotmatch/blob/master/LICENSE
 	:alt: License
@@ -80,6 +98,10 @@ libgunshotmatch
 .. |maintained| image:: https://img.shields.io/maintenance/yes/2023
 	:alt: Maintenance
 
+.. |pypi-downloads| image:: https://img.shields.io/pypi/dm/libgunshotmatch
+	:target: https://pypi.org/project/libgunshotmatch/
+	:alt: PyPI - Downloads
+
 .. end shields
 
 Installation
@@ -87,12 +109,12 @@ Installation
 
 .. start installation
 
-``libgunshotmatch`` can be installed from GitHub.
+``libgunshotmatch`` can be installed from PyPI.
 
 To install with ``pip``:
 
 .. code-block:: bash
 
-	$ python -m pip install git+https://github.com/GunShotMatch/libgunshotmatch
+	$ python -m pip install libgunshotmatch
 
 .. end installation

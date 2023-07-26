@@ -21,8 +21,10 @@ libgunshotmatch
 		  - |docs| |docs_check|
 		* - Tests
 		  - |actions_linux| |actions_windows| |actions_macos|
+		* - PyPI
+		  - |pypi-version| |supported-versions| |supported-implementations| |wheel|
 		* - Activity
-		  - |commits-latest| |commits-since| |maintained|
+		  - |commits-latest| |commits-since| |maintained| |pypi-downloads|
 		* - QA
 		  - |codefactor| |actions_flake8| |actions_mypy|
 		* - Other
@@ -63,6 +65,26 @@ libgunshotmatch
 	.. |codefactor| codefactor-shield::
 		:alt: CodeFactor Grade
 
+	.. |pypi-version| pypi-shield::
+		:project: libgunshotmatch
+		:version:
+		:alt: PyPI - Package Version
+
+	.. |supported-versions| pypi-shield::
+		:project: libgunshotmatch
+		:py-versions:
+		:alt: PyPI - Supported Python Versions
+
+	.. |supported-implementations| pypi-shield::
+		:project: libgunshotmatch
+		:implementations:
+		:alt: PyPI - Supported Implementations
+
+	.. |wheel| pypi-shield::
+		:project: libgunshotmatch
+		:wheel:
+		:alt: PyPI - Wheel
+
 	.. |license| github-shield::
 		:license:
 		:alt: License
@@ -82,6 +104,11 @@ libgunshotmatch
 	.. |maintained| maintained-shield:: 2023
 		:alt: Maintenance
 
+	.. |pypi-downloads| pypi-shield::
+		:project: libgunshotmatch
+		:downloads: month
+		:alt: PyPI - Downloads
+
 .. end shields
 
 Installation
@@ -90,6 +117,7 @@ Installation
 .. start installation
 
 .. installation:: libgunshotmatch
+	:pypi:
 	:github:
 
 .. end installation
