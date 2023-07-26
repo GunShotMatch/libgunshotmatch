@@ -365,8 +365,7 @@ def get_info_from_gcms_data(gcms_data: GCMS_data) -> GCMSDataInfo:
 	# calculate median number of m/z values measured per scan
 	n_list = []
 	scan_list = gcms_data.scan_list
-	for ii in range(len(scan_list)):
-		scan = scan_list[ii]
+	for scan in scan_list:
 		n = len(scan)
 		n_list.append(n)
 	n_mz_mean = mean(n_list)
@@ -376,7 +375,7 @@ def get_info_from_gcms_data(gcms_data: GCMS_data) -> GCMSDataInfo:
 			rt_range=(gcms_data._min_rt / 60, gcms_data._max_rt / 60),
 			time_step=gcms_data._time_step,
 			time_step_stdev=gcms_data._time_step_std,
-			n_scans=len(gcms_data.scan_list),
+			n_scans=len(scan_list),
 			mz_range=(gcms_data._min_mass, gcms_data._max_mass),
 			num_mz_mean=n_mz_mean,
 			num_mz_median=n_mz_median,
