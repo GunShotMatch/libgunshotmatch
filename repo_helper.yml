@@ -37,3 +37,4 @@ extra_sphinx_extensions:
 
 sphinx_conf_epilogue:
   - nitpicky = True
+  - toctree_plus_types.update({"method", "attribute"})

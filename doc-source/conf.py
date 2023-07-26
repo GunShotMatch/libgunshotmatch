@@ -79,3 +79,4 @@ def setup(app):
 
 
 nitpicky = True
+toctree_plus_types.update({"method", "attribute"})

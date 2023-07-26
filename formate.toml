@@ -33,6 +33,7 @@ remove_redundant_aliases = true
 default_section = "THIRDPARTY"
 known_third_party = [
     "attrs",
+    "chemistry_tools",
     "domdf_python_tools",
     "enum_tools",
     "mathematical",
@@ -42,5 +43,7 @@ known_third_party = [
     "pyms_nist_search",
     "scipy",
     "sdjson",
+    "tomli",
+    "tomli_w",
 ]
 known_first_party = "libgunshotmatch"

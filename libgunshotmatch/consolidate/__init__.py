@@ -27,50 +27,30 @@ Functions for combining peak identifications across aligned peaks into a single 
 #
 
 # stdlib
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Tuple, Type, Union
+from collections import Counter
+from itertools import permutations
+from multiprocessing import Pool
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Tuple, Type, Union, cast
 
 # 3rd party
 import attr
 import numpy
 import pandas  # type: ignore[import]
+import pyms_nist_search
+from pyms.DPA.Alignment import Alignment  # type: ignore[import]
 from pyms.Spectrum import MassSpectrum  # type: ignore[import]
-from pyms_nist_search import ReferenceData
+from pyms_nist_search import ReferenceData, SearchResult
 
-__all__ = ["ConsolidatedPeak", "ConsolidatedSearchResult"]
+# this package
+from libgunshotmatch.consolidate._fields import (
+		_attrs_convert_cas,
+		_attrs_convert_ms_comparison,
+		_attrs_convert_reference_data
+		)
+from libgunshotmatch.consolidate._spectra import PermsListType, _map_func
+from libgunshotmatch.peak import QualifiedPeak
 
-
-def _attrs_convert_cas(cas: str) -> str:
-	if cas == "0-00-0":
-		cas = "---"
-
-	return cas
-
-
-_reference_data_error_msg = ''.join([
-		"'reference_data' must be a `pyms_nist_search.ReferenceData` object,",
-		"a dictionary representing a `ReferenceData` object,",
-		"or `None`",
-		])
-
-
-def _attrs_convert_reference_data(reference_data: Union[Dict, ReferenceData, None]) -> Optional[ReferenceData]:
-
-	if reference_data is None:
-		return None
-
-	elif isinstance(reference_data, ReferenceData):
-		return reference_data
-
-	elif isinstance(reference_data, dict):
-		expected_keys = {"name", "cas", "formula", "contributor", "nist_no", "id", "mw", "mass_spec", "synonyms"}
-		if set(reference_data.keys()) != expected_keys:
-			# print(set(reference_data.keys()))
-			raise TypeError(_reference_data_error_msg)
-		else:
-			return ReferenceData(**reference_data)
-
-	else:
-		raise TypeError(_reference_data_error_msg)
+__all__ = ("ConsolidatedPeak", "ConsolidatedSearchResult", "match_counter", "pairwise_ms_comparisons")
 
 
 @attr.define(frozen=True)
@@ -208,7 +188,7 @@ class ConsolidatedSearchResult:
 				}
 
 	@classmethod
-	def from_dict(cls: Type["ConsolidatedSearchResult"], d: Dict[str, Any]) -> "ConsolidatedSearchResult":
+	def from_dict(cls: Type["ConsolidatedSearchResult"], d: Mapping[str, Any]) -> "ConsolidatedSearchResult":
 		"""
 		Construct a :class:`~.ConsolidatedSearchResult` from a dictionary.
 
@@ -240,20 +220,6 @@ def _attrs_convert_hits(hits: Optional[List[ConsolidatedSearchResult]]) -> List[
 			raise TypeError("'hits' must be a list of ConsolidatedSearchResult objects")
 
 	return hits
-
-
-def _attrs_convert_ms_comparison(
-		ms_comparison: Union[Mapping[str, float], pandas.Series, None],
-		) -> pandas.Series:
-
-	if ms_comparison is None:
-		return pandas.Series()
-	elif isinstance(ms_comparison, pandas.Series):
-		return ms_comparison
-	elif isinstance(ms_comparison, Mapping):
-		return pandas.Series(ms_comparison)
-	else:
-		raise TypeError("'ms_comparison' must be a mapping or a pandas.Series")
 
 
 @attr.define(init=False)
@@ -482,7 +448,7 @@ class ConsolidatedPeak:
 		return numpy.count_nonzero(~numpy.isnan(self.rt_list))
 
 	@classmethod
-	def from_dict(cls: Type["ConsolidatedPeak"], d: Dict[str, Any]) -> "ConsolidatedPeak":
+	def from_dict(cls: Type["ConsolidatedPeak"], d: Mapping[str, Any]) -> "ConsolidatedPeak":
 		"""
 		Construct a :class:`~.ConsolidatedPeak` from a dictionary.
 
@@ -501,3 +467,178 @@ class ConsolidatedPeak:
 				ms_comparison=d["ms_comparison"],
 				hits=hits,
 				)
+
+
+def pairwise_ms_comparisons(alignment: Alignment) -> pandas.DataFrame:
+	"""
+	Between Samples Spectra Comparison.
+
+	:param alignment:
+
+	:returns: :class:`pandas.DataFrame` where the columns are pairwise spectrum similarity scores and the rows are the peaks.
+	"""
+
+	perms: PermsListType = []
+
+	ms_alignment: pandas.DataFrame = alignment.get_ms_alignment(require_all_expr=False)
+
+	# Alternatively ms_alignment.columns
+	for i in permutations(alignment.expr_code, 2):
+		if i[::-1] not in perms:
+			perms.append(i)  # type: ignore[arg-type]
+
+	rows_list: List[Tuple[int, pandas.Series, PermsListType]] = []
+
+	for peak_number, spectra in ms_alignment.iterrows():
+		# Spectra is a Series where each element (column) corresponds to a MassSpectrum in a repeat.
+		rows_list.append((peak_number, spectra, perms))
+
+	with Pool(len(ms_alignment.columns)) as p:
+		ms_comparison = p.starmap(_map_func, rows_list)
+
+	# TODO: linear mode
+
+	# Convert list of (peak_number, comparisons) pairs to data frame
+	column_labels = ["{} & {}".format(*perm) for perm in perms]
+	comparison_dict = {}
+
+	for peak_number, comparison in ms_comparison:
+		comparison_dict[peak_number] = comparison
+
+	comparison_df = pandas.DataFrame.from_dict(data=comparison_dict, columns=column_labels, orient="index")
+
+	return comparison_df
+
+
+def match_counter(
+		engine: pyms_nist_search.Engine,
+		peak_numbers: List[int],
+		qualified_peaks: List[List[QualifiedPeak]],
+		ms_comp_data: pandas.DataFrame,
+		) -> List[ConsolidatedPeak]:
+	"""
+	Find the most likely compound for each peak.
+
+	:param engine:
+	:param peak_numbers: List of peak numbers to process.
+	:param qualified_peaks: List of lists of qualified aligned peaks for each repeat.
+	:param ms_comp_data: Dataframe giving pairwise mass spectrum comparisons for each set of aligned peaks.
+	"""
+
+	# Convert peak_numbers to a set and sort smallest to largest
+	peak_numbers = sorted(set(peak_numbers))
+
+	peak: Optional[QualifiedPeak]
+	hit: SearchResult
+
+	aligned_peaks = []
+	consolidated_peaks = []
+
+	for n in peak_numbers:
+		row: List[Optional[QualifiedPeak]] = []
+		# for experiment in project.alignment.expr_code:
+		for experiment in qualified_peaks:
+			assert experiment is not None
+			for peak in experiment:
+				if peak.peak_number == n:
+					row.append(peak)
+					break
+			else:
+				row.append(None)
+
+		aligned_peaks.append(row)
+
+		rt_data = []
+		area_data = []
+		ms_data = []
+		hits = []
+		names = []
+
+		for peak in row:
+			if peak:
+				rt_data.append(peak.rt)
+				area_data.append(peak.area)
+				ms_data.append(peak.mass_spectrum)
+
+				for hit in peak.hits:
+					hits.append(hit)
+					names.append(hit.name)
+
+			else:
+				rt_data.append(numpy.nan)
+				area_data.append(numpy.nan)
+				ms_data.append(None)
+
+		names.sort()
+		names_count = Counter(names)
+		# print(names_count)
+		# exit()
+
+		hits_data = []
+
+		for compound, count in names_count.items():
+
+			# numpy,nan is officially a float, but it doesn't matter for our purposes
+			# and the other elements in the lists most definately want to be integers
+			NaN = cast(int, numpy.nan)
+
+			mf_data: List[int] = []
+			rmf_data: List[int] = []
+			hit_num_data: List[int] = []
+
+			for peak in row:
+				if peak is None:
+					mf_data.append(NaN)
+					rmf_data.append(NaN)
+					hit_num_data.append(NaN)
+
+				else:
+					# print(peak.bounds)
+					# input(">")
+					for hit_idx, hit in enumerate(peak.hits):
+						if hit.name == compound:
+							mf_data.append(hit.match_factor)
+							rmf_data.append(hit.reverse_match_factor)
+							hit_num_data.append(hit_idx + 1)
+							CAS = hit.cas
+							spec_loc = hit.spec_loc
+
+							break
+					else:
+						mf_data.append(NaN)
+						rmf_data.append(NaN)
+						hit_num_data.append(NaN)
+
+			# print(f"Obtaining reference data for {compound} (CAS {CAS})")
+			ref_data = engine.get_reference_data(spec_loc)
+			# print(ref_data)
+			hits_data.append(
+					ConsolidatedSearchResult(
+							name=compound,
+							cas=CAS,
+							mf_list=mf_data,
+							rmf_list=rmf_data,
+							hit_numbers=hit_num_data,
+							reference_data=ref_data,
+							)
+					)
+
+		# Sort consolidated hit list
+		hits_data = sorted(hits_data, key=lambda k: (len(k), k.match_factor, k.average_hit_number), reverse=True)
+		# consolidated_peak = ConsolidatedPeak(rt_data, area_data, ms_data, peak_number=n, hits=hits_data, ms_comparison=ms_comp_data.loc[n])
+		consolidated_peak = ConsolidatedPeak(
+				rt_data,
+				area_data,
+				ms_data,
+				hits=hits_data,
+				ms_comparison=ms_comp_data.loc[n],
+				meta={"peak_number": n}
+				)
+
+		# consolidated_peak.hits = hits_data  # [:n_hits]
+
+		# consolidated_peak.ms_comparison = ms_comp_data.loc[n]
+
+		consolidated_peaks.append(consolidated_peak)
+
+	return consolidated_peaks

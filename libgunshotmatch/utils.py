@@ -31,10 +31,13 @@ from decimal import Decimal
 from typing import Optional, Sequence, Union
 
 # 3rd party
+import numpy
+from chemistry_tools.spectrum_similarity import SpectrumSimilarity
 from mathematical.utils import rounders
+from pyms.Spectrum import MassSpectrum  # type: ignore[import]
 from scipy.stats import truncnorm  # type: ignore[import]
 
-__all__ = ("round_rt", "get_truncated_normal")
+__all__ = ("round_rt", "get_truncated_normal", "ms_comparison")
 
 
 def round_rt(rt: Union[str, float, Decimal]) -> Decimal:
@@ -75,3 +78,31 @@ def get_truncated_normal(
 
 	dist = truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
 	return dist.rvs(count, random_state=random_state)
+
+
+def ms_comparison(top_ms: MassSpectrum, bottom_ms: MassSpectrum) -> Optional[float]:
+	"""
+	Performs a Mass Spectrum similarity calculation two mass spectra.
+
+	:param top_ms:
+	:param bottom_ms:
+
+	If either of ``top_ms`` or ``bottom_ms`` is :py:obj:`None` then :py:obj:`None` is returned,
+	otherwise a comparison score is returned.
+	"""
+
+	if top_ms is None or bottom_ms is None:
+		return None
+
+	top_spec = numpy.column_stack((top_ms.mass_list, top_ms.mass_spec))
+	bottom_spec = numpy.column_stack((bottom_ms.mass_list, bottom_ms.mass_spec))
+
+	sim = SpectrumSimilarity(
+			top_spec,
+			bottom_spec,
+			b=1,
+			xlim=(45, 500),  # TODO: configurable or taken from spectra
+			)
+
+	match, rmatch = sim.score()
+	return match * 1000
