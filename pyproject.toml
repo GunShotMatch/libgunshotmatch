@@ -41,8 +41,10 @@ always = [
     "libgunshotmatch",
     "libgunshotmatch.consolidate",
     "libgunshotmatch.datafile",
+    "libgunshotmatch.gzip_util",
     "libgunshotmatch.method",
     "libgunshotmatch.peak",
+    "libgunshotmatch.project",
     "libgunshotmatch.search",
     "libgunshotmatch.utils",
 ]
