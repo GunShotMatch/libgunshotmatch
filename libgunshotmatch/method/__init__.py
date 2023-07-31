@@ -50,6 +50,7 @@ from libgunshotmatch.method._fields import (
 		convert_rt_range,
 		default_base_peak_filter
 		)
+from libgunshotmatch.utils import _fix_init_annotations, _to_list
 
 __all__ = [
 		"MethodBase",
@@ -62,20 +63,6 @@ __all__ = [
 		]
 
 _MB = TypeVar("_MB", bound="MethodBase")
-
-
-def _fix_init_annotations(method: Type[_MB]) -> Type[_MB]:
-	init_annotations = method.__init__.__annotations__
-	cls_annotations = method.__annotations__
-
-	for k, v in cls_annotations.items():
-		if k in init_annotations:
-			if init_annotations[k] is Any:
-				init_annotations[k] = v
-		else:
-			init_annotations[k] = v
-
-	return method
 
 
 class MethodBase:
@@ -203,13 +190,38 @@ class AlignmentMethod(MethodBase):
 class ConsolidateMethod(MethodBase):
 	"""
 	Method used for consolidation (finding most likely identity for aligned peaks).
+
+	:param min_appearances: Number of times the hit must appear across individual the aligned peaks.
+		Consolidated peaks where the most common hit appears fewer times than this will be excluded.
+		If set to ``-1`` this number of repeats in the project are used.
+
+	.. versionchanged:: 0.2.0  Added the ``min_appearances`` argument.
 	"""
 
-	#: List of glob-style matches for compound names. Consolidated peaks matching any of these will be excluded.
-	name_filter: List[str] = attr.field(converter=list, default=attr.Factory(list))
+	name_filter: List[str] = attr.field(converter=_to_list, default=attr.Factory(list))
+	"""
+	List of glob-style matches for compound names.
 
-	#: Minimum average match factor. Consolidated peaks with an average match factor below this will be excluded.
+	Consolidated peaks matching any of these will be excluded.
+	"""
+
 	min_match_factor: int = Integer.field(default=600)
+	"""
+	Minimum average match factor.
+
+	Consolidated peaks with an average match factor below this will be excluded.
+	"""
+
+	min_appearances: int = Integer.field(default=-1)
+	"""
+	Number of times the hit must appear across individual the aligned peaks.
+
+	Consolidated peaks where the most common hit appears fewer times than this will be excluded.
+
+	If set to ``-1`` this number of repeats in the project are used.
+
+	.. versionadded:: 0.2.0
+	"""
 
 
 # target_range = 4.0,37.0

@@ -27,6 +27,7 @@ Functions for combining peak identifications across aligned peaks into a single 
 #
 
 # stdlib
+import fnmatch
 from collections import Counter
 from itertools import permutations
 from multiprocessing import Pool
@@ -48,9 +49,18 @@ from libgunshotmatch.consolidate._fields import (
 		_attrs_convert_reference_data
 		)
 from libgunshotmatch.consolidate._spectra import PermsListType, _map_func
+from libgunshotmatch.method import ConsolidateMethod
+from libgunshotmatch.method._fields import Integer
 from libgunshotmatch.peak import QualifiedPeak
+from libgunshotmatch.utils import _fix_init_annotations, _to_list
 
-__all__ = ("ConsolidatedPeak", "ConsolidatedSearchResult", "match_counter", "pairwise_ms_comparisons")
+__all__ = (
+		"ConsolidatedPeak",
+		"ConsolidatedSearchResult",
+		"match_counter",
+		"pairwise_ms_comparisons",
+		"ConsolidatedPeakFilter"
+		)
 
 
 @attr.define(frozen=True)
@@ -642,3 +652,95 @@ def match_counter(
 		consolidated_peaks.append(consolidated_peak)
 
 	return consolidated_peaks
+
+
+@_fix_init_annotations
+@attr.define
+class ConsolidatedPeakFilter:
+	"""
+	Class to filter a list of consolidated peaks to exclude peaks by hit name, match factor etc.
+
+	.. versionadded:: 0.2.0
+	"""
+
+	name_filter: List[str] = attr.field(converter=_to_list, default=attr.Factory(list))
+	"""
+	List of glob-style matches for compound names.
+
+	Consolidated peaks matching any of these will be excluded.
+	"""
+
+	min_match_factor: int = Integer.field(default=600)
+	"""
+	Minimum average match factor.
+
+	Consolidated peaks with an average match factor below this will be excluded.
+	"""
+
+	min_appearances: int = Integer.field(default=-1)
+	"""
+	Number of times the hit must appear across individual the aligned peaks.
+
+	Consolidated peaks where the most common hit appears fewer times than this will be excluded.
+
+	If set to ``-1`` this number of repeats in the project are used.
+	"""
+
+	#: If :py:obj:`True` details of excluded peaks will be printed.
+	verbose: bool = False
+
+	@classmethod
+	def from_method(cls: Type["ConsolidatedPeakFilter"], method: ConsolidateMethod) -> "ConsolidatedPeakFilter":
+		"""
+		Construct a :class:`~.ConsolidatedPeakFilter` from a :class:`~.ConsolidateMethod`.
+
+		:param method:
+		"""
+
+		return cls(
+				name_filter=method.name_filter,
+				min_match_factor=method.min_match_factor,
+				min_appearances=method.min_appearances,
+				)
+
+	def print_skip_reason(self, peak: ConsolidatedPeak, reason: str) -> None:
+		"""
+		Print the reason for skipping a peak, if :py:attr:`.ConsolidatedPeakFilter.verbose` is :py:obj:`True`.
+
+		:param peak: The peak being skipped.
+		:param reason: The reason for skipping the peak.
+		"""
+
+		if self.verbose:
+			print(f"Skipping peak at {peak.rt / 60:0.3f} mins:", reason)
+
+	def filter(self, consolidated_peaks: List[ConsolidatedPeak]) -> List[ConsolidatedPeak]:  # noqa: A003  # pylint: disable=redefined-builtin
+		"""
+		Filter a list of consolidated peaks.
+
+		:param consolidated_peaks:
+		"""
+
+		filtered_consolidated_peaks = []
+
+		for cp in consolidated_peaks:
+			hit = cp.hits[0]
+
+			if len(hit) < self.min_appearances:
+				self.print_skip_reason(cp, f"top hit {hit.name!r} only appears {len(hit)} times")
+				continue
+
+			for nf in self.name_filter:
+				if fnmatch.fnmatch(hit.name.lower(), nf):
+					self.print_skip_reason(cp, f"name {hit.name!r} matches {nf!r}")
+					continue
+
+			# mean_match_factor = mean(hit.mf_list)
+			mean_match_factor = hit.match_factor
+			if mean_match_factor < self.min_match_factor:
+				self.print_skip_reason(cp, f"MF {mean_match_factor} <600")
+				continue
+
+			filtered_consolidated_peaks.append(cp)
+
+		return filtered_consolidated_peaks

@@ -27,7 +27,6 @@ Represents a collection of repeat analyses.
 #
 
 # stdlib
-import fnmatch
 import os
 from typing import Any, Dict, List, Mapping, Optional, Type
 
@@ -42,7 +41,12 @@ from pyms.Peak.Class import Peak  # type: ignore[import]
 
 # this package
 from libgunshotmatch import gzip_util
-from libgunshotmatch.consolidate import ConsolidatedPeak, match_counter, pairwise_ms_comparisons
+from libgunshotmatch.consolidate import (
+		ConsolidatedPeak,
+		ConsolidatedPeakFilter,
+		match_counter,
+		pairwise_ms_comparisons
+		)
 from libgunshotmatch.datafile import Repeat
 from libgunshotmatch.peak import PeakList, QualifiedPeak, peak_from_dict
 
@@ -194,36 +198,14 @@ class Project:
 				ms_comp_data=ms_comparison_df,
 				)
 
-		filtered_consolidated_peaks = []
-		name_filter = ["*silane*", "*silyl*", "*siloxy*"]
+		cp_filter = ConsolidatedPeakFilter(
+				name_filter=["*silane*", "*silyl*", "*siloxy*"],
+				min_match_factor=600,
+				min_appearances=5,
+				verbose=True,
+				)
 
-		def print_skip_reason(peak: ConsolidatedPeak, reason: str) -> None:
-			if verbose:
-				print(f"Skipping peak at {peak.rt / 60:0.3f} mins:", reason)
-
-		for cp in consolidated_peaks:
-			hit = cp.hits[0]
-			if len(hit) < 5:
-				print_skip_reason(cp, f"top hit {hit.name!r} only appears {len(hit)} times")
-				continue
-			for nf in name_filter:
-				if fnmatch.fnmatch(hit.name.lower(), nf):
-					print_skip_reason(cp, f"name {hit.name!r} matches {nf!r}")
-					continue
-			# if "silane" in hit.name.lower():
-			# 	continue
-			# if "silyl" in hit.name.lower():
-			# 	continue
-			# if "siloxy" in hit.name.lower():
-			# 	continue
-			# mean_match_factor = mean(hit.mf_list)
-			mean_match_factor = hit.match_factor
-			if mean_match_factor < 600:
-				print_skip_reason(cp, f"MF {mean_match_factor} <600")
-				continue
-			filtered_consolidated_peaks.append(cp)
-
-		self.consolidated_peaks = filtered_consolidated_peaks
+		self.consolidated_peaks = cp_filter.filter(consolidated_peaks)
 
 		return ms_comparison_df
 

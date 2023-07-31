@@ -28,7 +28,7 @@ Utility functions.
 
 # stdlib
 from decimal import Decimal
-from typing import Optional, Sequence, Union
+from typing import Any, Iterable, List, Optional, Sequence, Type, TypeVar, Union
 
 # 3rd party
 import numpy
@@ -106,3 +106,33 @@ def ms_comparison(top_ms: MassSpectrum, bottom_ms: MassSpectrum) -> Optional[flo
 
 	match, rmatch = sim.score()
 	return match * 1000
+
+
+_O = TypeVar("_O", bound=object)
+
+
+def _fix_init_annotations(method: Type[_O]) -> Type[_O]:
+	init_annotations = method.__init__.__annotations__
+	cls_annotations = method.__annotations__
+
+	for k, v in cls_annotations.items():
+		if k in init_annotations:
+			if init_annotations[k] is Any:
+				init_annotations[k] = v
+		else:
+			init_annotations[k] = v
+
+	return method
+
+
+def _to_list(l: Iterable[str]) -> List[str]:
+	"""
+	Attrs type hint helper for converting to a list.
+
+	Otherwise the errors are:
+
+	libgunshotmatch/consolidate/__init__.py:701: error: Argument "name_filter" to "ConsolidatedPeakFilter" has incompatible type "List[str]"; expected "Iterable[_T]"  [arg-type]
+	libgunshotmatch/project.py:202: error: List item 0 has incompatible type "str"; expected "_T"  [list-item]
+	"""
+
+	return list(l)
