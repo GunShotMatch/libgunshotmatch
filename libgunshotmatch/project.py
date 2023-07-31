@@ -161,12 +161,16 @@ class Project:
 				datafile_data=datafile_data,
 				)
 
-	def consolidate(self, engine: pyms_nist_search.Engine, verbose: bool = False) -> pandas.DataFrame:
+	def consolidate(
+			self,
+			engine: pyms_nist_search.Engine,
+			peak_filter: Optional[ConsolidatedPeakFilter] = None,
+			) -> pandas.DataFrame:
 		"""
 		Consolidate the compound identification from the experiments into a single dataset.
 
 		:param engine:
-		:param verbose: If :py:obj:`True` details of excluded peaks will be printed.
+		:param peak_filter: Filter for the consolidated peaks.
 
 		:returns: :class:`pandas.DataFrame` giving the results of pairwise mass spectral comparisons
 			between the repeats for each aligned peak.
@@ -198,14 +202,10 @@ class Project:
 				ms_comp_data=ms_comparison_df,
 				)
 
-		cp_filter = ConsolidatedPeakFilter(
-				name_filter=["*silane*", "*silyl*", "*siloxy*"],
-				min_match_factor=600,
-				min_appearances=5,
-				verbose=True,
-				)
-
-		self.consolidated_peaks = cp_filter.filter(consolidated_peaks)
+		if peak_filter is None:
+			self.consolidated_peaks = consolidated_peaks
+		else:
+			self.consolidated_peaks = peak_filter.filter(consolidated_peaks)
 
 		return ms_comparison_df
 
