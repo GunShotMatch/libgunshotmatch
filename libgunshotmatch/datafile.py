@@ -73,7 +73,7 @@ class FileType(IntEnum):
 		raise ValueError(f"Unrecognised file format {value}")
 
 
-@attr.define()
+@attr.define
 class Datafile:
 	"""
 	Represents a single datafile in a project.
@@ -363,11 +363,9 @@ def get_info_from_gcms_data(gcms_data: GCMS_data) -> GCMSDataInfo:
 	# TODO: within pyms make read only properties for these private attributes
 
 	# calculate median number of m/z values measured per scan
-	n_list = []
 	scan_list = gcms_data.scan_list
-	for scan in scan_list:
-		n = len(scan)
-		n_list.append(n)
+
+	n_list = [len(scan) for scan in scan_list]
 	n_mz_mean = mean(n_list)
 	n_mz_median = median(n_list)
 

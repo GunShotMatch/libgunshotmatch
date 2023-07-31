@@ -244,8 +244,8 @@ class ConsolidatedPeak:
 		If :py:obj:`True`, retention time is in minutes;
 		if :py:obj:`False` retention time is in seconds
 	:param hits: Optional list of possible identities for this peak.
-	:param meta: Optional dictionary for storing e.g. peak number or whether the peak should be hidden.
 	:param ms_comparison: Mapping or Pandas :class:`~pandas.Series` giving pairwise mass spectral comparison scores.
+	:param meta: Optional dictionary for storing e.g. peak number or whether the peak should be hidden.
 	"""
 
 	#: List of retention times of the aligned peaks.
