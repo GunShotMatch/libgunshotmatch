@@ -150,6 +150,7 @@ Contents
 .. sidebar-links::
 	:caption: Links
 	:github:
+	:pypi: libgunshotmatch
 
 
 .. start links
