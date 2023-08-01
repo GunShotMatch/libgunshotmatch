@@ -714,6 +714,32 @@ class ConsolidatedPeakFilter:
 		if self.verbose:
 			print(f"Skipping peak at {peak.rt / 60:0.3f} mins:", reason)
 
+	def should_filter_peak(self, peak: ConsolidatedPeak) -> bool:
+		"""
+		Returns :py:obj:`True` if the peak should be excluded based on the current filter options.
+
+		:param peak:
+		"""
+
+		hit = peak.hits[0]
+
+		if len(hit) < self.min_appearances:
+			self.print_skip_reason(peak, f"top hit {hit.name!r} only appears {len(hit)} times")
+			return True
+
+		for nf in self.name_filter:
+			if fnmatch.fnmatch(hit.name.lower(), nf):
+				self.print_skip_reason(peak, f"name {hit.name!r} matches {nf!r}")
+				return True
+
+		# mean_match_factor = mean(hit.mf_list)
+		mean_match_factor = hit.match_factor
+		if mean_match_factor < self.min_match_factor:
+			self.print_skip_reason(peak, f"MF {mean_match_factor} <600")
+			return True
+
+		return False
+
 	def filter(self, consolidated_peaks: List[ConsolidatedPeak]) -> List[ConsolidatedPeak]:  # noqa: A003  # pylint: disable=redefined-builtin
 		"""
 		Filter a list of consolidated peaks.
@@ -724,23 +750,7 @@ class ConsolidatedPeakFilter:
 		filtered_consolidated_peaks = []
 
 		for cp in consolidated_peaks:
-			hit = cp.hits[0]
-
-			if len(hit) < self.min_appearances:
-				self.print_skip_reason(cp, f"top hit {hit.name!r} only appears {len(hit)} times")
-				continue
-
-			for nf in self.name_filter:
-				if fnmatch.fnmatch(hit.name.lower(), nf):
-					self.print_skip_reason(cp, f"name {hit.name!r} matches {nf!r}")
-					continue
-
-			# mean_match_factor = mean(hit.mf_list)
-			mean_match_factor = hit.match_factor
-			if mean_match_factor < self.min_match_factor:
-				self.print_skip_reason(cp, f"MF {mean_match_factor} <600")
-				continue
-
-			filtered_consolidated_peaks.append(cp)
+			if not self.should_filter_peak(cp):
+				filtered_consolidated_peaks.append(cp)
 
 		return filtered_consolidated_peaks
