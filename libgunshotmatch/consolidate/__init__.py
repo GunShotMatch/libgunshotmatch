@@ -634,7 +634,7 @@ def match_counter(
 					)
 
 		# Sort consolidated hit list
-		hits_data = sorted(hits_data, key=lambda k: (len(k), k.match_factor, k.average_hit_number), reverse=True)
+		hits_data = sorted(hits_data, key=lambda k: (len(k), k.match_factor, -k.average_hit_number), reverse=True)
 		# consolidated_peak = ConsolidatedPeak(rt_data, area_data, ms_data, peak_number=n, hits=hits_data, ms_comparison=ms_comp_data.loc[n])
 		consolidated_peak = ConsolidatedPeak(
 				rt_data,
