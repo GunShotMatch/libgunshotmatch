@@ -35,6 +35,17 @@ extra_sphinx_extensions:
   - attr_utils.autoattrs
   - remove_factory_defaults
 
+github_ci_requirements:
+ Linux:
+  post:
+   - sudo add-apt-repository universe
+   - sudo apt update
+   - sudo apt install libhdf5-dev netcdf-bin libnetcdf-dev
+ Windows:
+  post:
+   # Prefery binary wheels for older versions over sdists for newer ones
+   - pip config set global.prefer-binary true
+
 sphinx_conf_epilogue:
   - nitpicky = True
   - toctree_plus_types.update({"method", "attribute"})
