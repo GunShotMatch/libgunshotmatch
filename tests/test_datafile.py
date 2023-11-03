@@ -23,7 +23,9 @@ from libgunshotmatch.peak import PeakList, filter_peaks
 				"ELEY_5_SUBTRACT.JDX",
 				]
 		)
-def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFileRegressionFixture):
+def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFileRegressionFixture, monkeypatch):
+	monkeypatch.setenv("USERNAME", "test-user")
+
 	method = Method()
 
 	path = PathPlus(__file__).parent / filename
