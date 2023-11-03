@@ -1,0 +1,5 @@
+gap_penalty: 0.3
+min_peak_area: 1500000.0
+min_peaks: 1
+rt_modulation: 2.5
+top_n_peaks: 80

@@ -1,0 +1,30 @@
+alignment:
+  gap_penalty: 0.3
+  min_peak_area: 0.0
+  min_peaks: 1
+  rt_modulation: 2.5
+  top_n_peaks: 80
+consolidate:
+  min_appearances: -1
+  min_match_factor: 600
+  name_filter: []
+intensity_matrix:
+  crop_mass_range:
+  - 50
+  - 500
+  savitzky_golay:
+    degree: 2
+    enable: true
+    window: 7
+  tophat: true
+  tophat_structure_size: 1.5m
+peak_detection:
+  points: 10
+  scans: 1
+peak_filter:
+  base_peak_filter:
+  - 73
+  - 147
+  noise_filter: true
+  noise_threshold: 2
+  rt_range: null

@@ -20,7 +20,7 @@ libgunshotmatch
 		* - Docs
 		  - |docs| |docs_check|
 		* - Tests
-		  - |actions_linux| |actions_windows| |actions_macos|
+		  - |actions_linux| |actions_windows| |actions_macos| |coveralls|
 		* - PyPI
 		  - |pypi-version| |supported-versions| |supported-implementations| |wheel|
 		* - Activity
@@ -61,6 +61,9 @@ libgunshotmatch
 	.. |requires| image:: https://dependency-dash.repo-helper.uk/github/GunShotMatch/libgunshotmatch/badge.svg
 		:target: https://dependency-dash.repo-helper.uk/github/GunShotMatch/libgunshotmatch/
 		:alt: Requirements Status
+
+	.. |coveralls| coveralls-shield::
+		:alt: Coverage
 
 	.. |codefactor| codefactor-shield::
 		:alt: CodeFactor Grade

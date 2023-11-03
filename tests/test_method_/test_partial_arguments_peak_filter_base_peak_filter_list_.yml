@@ -1,0 +1,9 @@
+base_peak_filter:
+- 1
+- 2
+- 3
+- 4
+- 5
+noise_filter: true
+noise_threshold: 2
+rt_range: null

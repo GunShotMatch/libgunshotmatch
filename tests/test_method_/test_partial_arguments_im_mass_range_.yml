@@ -1,0 +1,9 @@
+crop_mass_range:
+- 100
+- 200
+savitzky_golay:
+  degree: 2
+  enable: true
+  window: 7
+tophat: true
+tophat_structure_size: 1.5m
