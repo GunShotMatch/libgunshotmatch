@@ -479,11 +479,12 @@ class ConsolidatedPeak:
 				)
 
 
-def pairwise_ms_comparisons(alignment: Alignment) -> pandas.DataFrame:
+def pairwise_ms_comparisons(alignment: Alignment, parallel: bool = True) -> pandas.DataFrame:
 	"""
 	Between Samples Spectra Comparison.
 
 	:param alignment:
+	:param parallel: Set to :py:obj:`False` to disable parallelisation.
 
 	:returns: :class:`pandas.DataFrame` where the columns are pairwise spectrum similarity scores and the rows are the peaks.
 	"""
@@ -503,8 +504,11 @@ def pairwise_ms_comparisons(alignment: Alignment) -> pandas.DataFrame:
 		# Spectra is a Series where each element (column) corresponds to a MassSpectrum in a repeat.
 		rows_list.append((peak_number, spectra, perms))
 
-	with Pool(len(ms_alignment.columns)) as p:
-		ms_comparison = p.starmap(_map_func, rows_list)
+	if parallel:
+		with Pool(len(ms_alignment.columns)) as p:
+			ms_comparison = p.starmap(_map_func, rows_list)
+	else:
+		ms_comparison = [_map_func(*row) for row in rows_list]
 
 	# TODO: linear mode
 
@@ -586,7 +590,10 @@ def match_counter(
 
 		hits_data = []
 
-		for compound, count in names_count.items():
+		# for compound, count in names_count.items():
+		for compound in names_count:
+			# TODO: is the counter actually necessary
+			# as the output from the for loop is sorted afterwards anyway?
 
 			# numpy,nan is officially a float, but it doesn't matter for our purposes
 			# and the other elements in the lists most definately want to be integers
