@@ -1,3 +1,6 @@
+# stdlib
+import os
+
 # 3rd party
 import pytest
 import sdjson
@@ -52,7 +55,7 @@ def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFile
 
 	as_dict = {
 			"name": datafile.name,
-			"original_filename": datafile.original_filename,
+			"original_filename": os.path.split(datafile.original_filename)[1],
 			"original_filetype": int(datafile.original_filetype),
 			"description": datafile.description,
 			"intensity_matrix": im_as_dict,
