@@ -27,7 +27,7 @@ Classes representing peaks, and functions for peak filtering.
 #
 
 # stdlib
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Type
+from typing import Any, Collection, Dict, List, Mapping, Optional, Sequence, Type
 
 # 3rd party
 import numpy
@@ -290,7 +290,7 @@ def filter_peaks(
 		tic: IonChromatogram,
 		noise_filter: bool = True,
 		noise_threshold: int = 2,
-		base_peak_filter: Sequence[int] = (73, 147),
+		base_peak_filter: Collection[int] = (73, 147),
 		rt_range: Optional[Sequence[float]] = None,
 		) -> PeakList:
 	"""
