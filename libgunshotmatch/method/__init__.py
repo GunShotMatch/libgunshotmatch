@@ -34,7 +34,7 @@ except ImportError:
 
 # stdlib
 import json
-from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Type, TypeVar
+from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Type, TypeVar, Union
 
 # 3rd party
 import attr
@@ -48,6 +48,7 @@ from libgunshotmatch.method._fields import (
 		String,
 		convert_crop_mass_range,
 		convert_rt_range,
+		convert_sg_window,
 		default_base_peak_filter
 		)
 from libgunshotmatch.utils import _fix_init_annotations, _to_list
@@ -60,6 +61,7 @@ __all__ = [
 		"PeakFilterMethod",
 		"AlignmentMethod",
 		"ConsolidateMethod",
+		"SavitzkyGolayMethod",
 		]
 
 _MB = TypeVar("_MB", bound="MethodBase")
@@ -105,6 +107,39 @@ class MethodBase:
 
 @_fix_init_annotations
 @attr.define
+class SavitzkyGolayMethod(MethodBase):
+	"""
+	Method parameters for the Savitzky-Golay filter.
+
+	.. versionadded:: 0.3.0
+	"""
+
+	#: Whether to perform Savitzky-Golay smoothing.
+	enable: bool = Boolean.field(default=True)
+
+	window: Union[str, int] = attr.field(default=7, converter=convert_sg_window)
+	"""
+	The window size for the Savitzky-Golay filter.
+
+	Either a number of scans or a must be the form ``'<NUMBER>s'`` or ``'<NUMBER>m'``,
+	specifying a time in seconds or minutes, respectively.
+	"""
+
+	#: The degree of the fitting polynomial for the Savitzky-Golay filter.
+	degree: int = Integer.field(default=2)
+
+
+def _convert_sg_method(method: Union[bool, "SavitzkyGolayMethod", Dict[str, Any]]) -> "SavitzkyGolayMethod":
+	if isinstance(method, bool):
+		return SavitzkyGolayMethod()
+	elif isinstance(method, SavitzkyGolayMethod):
+		return method
+	else:
+		return SavitzkyGolayMethod(**method)
+
+
+@_fix_init_annotations
+@attr.define
 class IntensityMatrixMethod(MethodBase):
 	"""
 	Method used for constructing an intensity matrix from a datafile.
@@ -114,7 +149,10 @@ class IntensityMatrixMethod(MethodBase):
 	crop_mass_range: Optional[Tuple[int, int]] = attr.field(default=(50, 500), converter=convert_crop_mass_range)
 
 	#: Whether to perform Savitzky-Golay smoothing.
-	savitzky_golay: bool = Boolean.field(default=True)
+	savitzky_golay: SavitzkyGolayMethod = attr.field(
+			default=SavitzkyGolayMethod(),
+			converter=_convert_sg_method,
+			)
 
 	#: Whether to perform Tophat baseline correction.
 	tophat: bool = Boolean.field(default=True)

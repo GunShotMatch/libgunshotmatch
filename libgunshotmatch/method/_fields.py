@@ -27,10 +27,11 @@ Internal attrs field helpers.
 #
 
 # stdlib
-from typing import Any, Generic, Iterable, Optional, Set, Tuple, Type, TypeVar
+from typing import Any, Generic, Iterable, Optional, Set, Tuple, Type, TypeVar, Union, overload
 
 # 3rd party
 import attr
+from pyms.Utils.Time import time_str_secs  # type: ignore[import]
 
 __all__ = [
 		"Boolean",
@@ -154,6 +155,29 @@ def convert_crop_mass_range(value: Optional[Iterable]) -> Optional[Tuple[int, in
 		raise ValueError(err_msg)
 
 	return value_as_tuple  # type: ignore[return-value]
+
+
+@overload
+def convert_sg_window(value: str) -> str: ...
+
+
+@overload
+def convert_sg_window(value: int) -> int: ...
+
+
+def convert_sg_window(value: Union[str, int]) -> Union[str, int]:
+	"""
+	Convert a Savitzky-Golay window size parameter value.
+	"""
+
+	if isinstance(value, int):
+		return value
+	elif isinstance(value, str):
+		# Check the string can be correctly parsed
+		time_str_secs(value)
+		return value
+	else:
+		raise TypeError("'savitzky_golay_window' must be either an integer or a string")
 
 
 def convert_rt_range(value: Optional[Iterable]) -> Optional[Tuple[float, float]]:

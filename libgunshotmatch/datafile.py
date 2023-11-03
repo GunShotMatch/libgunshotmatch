@@ -32,7 +32,7 @@ import os
 import socket
 from datetime import datetime
 from statistics import mean, median
-from typing import Any, Dict, List, Mapping, NamedTuple, Optional, Tuple, Type
+from typing import Any, Dict, List, Mapping, NamedTuple, Optional, Tuple, Type, Union
 
 # 3rd party
 import attr
@@ -46,6 +46,7 @@ from pyms.IntensityMatrix import IntensityMatrix, build_intensity_matrix_i  # ty
 
 # this package
 from libgunshotmatch import gzip_util
+from libgunshotmatch.method import SavitzkyGolayMethod
 from libgunshotmatch.peak import PeakList, QualifiedPeak, _to_peak_list, peak_from_dict
 
 __all__ = ["Datafile", "FileType", "Repeat", "get_info_from_gcms_data", "GCMSDataInfo"]
@@ -167,7 +168,7 @@ class Datafile:
 	def prepare_intensity_matrix(
 			self,
 			gcms_data: GCMS_data,
-			savitzky_golay: bool = True,
+			savitzky_golay: Union[bool, SavitzkyGolayMethod] = True,
 			tophat: bool = True,
 			tophat_structure_size: str = "1.5m",  # Ignored if tophat=False
 			crop_mass_range: Optional[Tuple[int, int]] = None,
@@ -222,7 +223,14 @@ class Datafile:
 			if savitzky_golay:
 				# Perform Savitzky-Golay smoothing.
 				# Note that Turbomass does not use smoothing for qualitative method.
-				ic = pyms.Noise.SavitzkyGolay.savitzky_golay(ic)
+				if isinstance(savitzky_golay, SavitzkyGolayMethod):
+					ic = pyms.Noise.SavitzkyGolay.savitzky_golay(
+							ic,
+							window=savitzky_golay.window,
+							degree=savitzky_golay.degree,
+							)
+				else:
+					ic = pyms.Noise.SavitzkyGolay.savitzky_golay(ic)
 
 			if tophat:
 				# Perform Tophat baseline correction
