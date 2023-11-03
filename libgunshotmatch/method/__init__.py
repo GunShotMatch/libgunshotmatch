@@ -208,7 +208,7 @@ class AlignmentMethod(MethodBase):
 	"""
 
 	#: Retention time tolerance parameter for pairwise alignments.
-	rt_modulation: bool = Number.field(default=2.5)
+	rt_modulation: float = Number.field(default=2.5)
 
 	#: Gap parameter for pairwise alignments.
 	gap_penalty: float = Number.field(default=0.3)
