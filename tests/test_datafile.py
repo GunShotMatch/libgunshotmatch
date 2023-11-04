@@ -118,7 +118,8 @@ def prepare_peak_list(datafile: Datafile, gcms_data: GCMS_data, method: Method) 
 
 
 @pytest.mark.flaky(reruns=1)
-def test_peaks(advanced_data_regression: AdvancedDataRegressionFixture):
+def test_peaks(advanced_data_regression: AdvancedDataRegressionFixture, monkeypatch):
+	monkeypatch.setenv("USERNAME", "test-user")
 
 	method = Method()
 	path = PathPlus(__file__).parent / f"ELEY_4_SUBTRACT.JDX"
