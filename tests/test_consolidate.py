@@ -60,7 +60,13 @@ def test_consolidate(
 	ms_comparison_df = project.consolidate(MockEngine(''), cp_filter).astype(int)
 
 	assert project.consolidated_peaks is not None
-	advanced_data_regression.check([cp.to_dict() for cp in project.consolidated_peaks])
+
+	consolidated_peaks = []
+	for cp in project.consolidated_peaks:
+		cp_as_dict = cp.to_dict()
+		cp_as_dict["ms_comparison"] = cp.ms_comparison.astype(int).to_dict()
+		consolidated_peaks.append(cp_as_dict)
+	advanced_data_regression.check(consolidated_peaks)
 	dataframe_regression.check(ms_comparison_df, basename="test_consolidate_ms_comparison_df")
 
 
