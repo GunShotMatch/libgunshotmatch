@@ -44,25 +44,25 @@ def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFile
 			crop_mass_range=method.intensity_matrix.crop_mass_range,
 			)
 
-	if datafile.intensity_matrix is None:
-		im_as_dict = None
-	else:
-		im_as_dict = {
-				"times": datafile.intensity_matrix.time_list,
-				"masses": datafile.intensity_matrix.mass_list,
-				"intensities": datafile.intensity_matrix.intensity_array.tolist(),
-				}
+	assert datafile.intensity_matrix is not None
 
 	as_dict = {
 			"name": datafile.name,
 			"original_filename": os.path.split(datafile.original_filename)[1],
 			"original_filetype": int(datafile.original_filetype),
 			"description": datafile.description,
-			"intensity_matrix": im_as_dict,
 			"version": datafile.version,
 			}
 
-	advanced_file_regression.check(sdjson.dumps(as_dict))
+	advanced_file_regression.check(sdjson.dumps(as_dict), extension=".json")
+
+	im_as_dict = {
+			"times": datafile.intensity_matrix.time_list,
+			"masses": datafile.intensity_matrix.mass_list,
+			"intensities": datafile.intensity_matrix.intensity_array.tolist(),
+			}
+
+	advanced_file_regression.check(sdjson.dumps(im_as_dict, indent=2), extension=".im.json")
 
 
 @pytest.mark.parametrize(
