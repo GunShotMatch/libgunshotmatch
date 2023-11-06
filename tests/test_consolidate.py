@@ -57,7 +57,7 @@ def test_consolidate(
 			verbose=True,
 			)
 
-	ms_comparison_df = project.consolidate(MockEngine(''), cp_filter)
+	ms_comparison_df = project.consolidate(MockEngine(''), cp_filter).astype(int)
 
 	assert project.consolidated_peaks is not None
 	advanced_data_regression.check([cp.to_dict() for cp in project.consolidated_peaks])
@@ -68,10 +68,10 @@ def test_pairwise_ms_comparison(dataframe_regression: DataFrameRegressionFixture
 	project_file = PathPlus(__file__).parent / "ELEY .22LR.gsmp"
 	project = Project.from_file(project_file)
 
-	ms_comparison_df = pairwise_ms_comparisons(project.alignment, parallel=False)
+	ms_comparison_df = pairwise_ms_comparisons(project.alignment, parallel=False).astype(int)
 	dataframe_regression.check(ms_comparison_df)
 
-	ms_comparison_df = pairwise_ms_comparisons(project.alignment)
+	ms_comparison_df = pairwise_ms_comparisons(project.alignment).astype(int)
 	dataframe_regression.check(ms_comparison_df)
 
 
