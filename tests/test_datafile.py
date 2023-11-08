@@ -14,6 +14,7 @@ from pyms.Peak.Function import peak_sum_area  # type: ignore[import]
 from libgunshotmatch.datafile import Datafile
 from libgunshotmatch.method import Method
 from libgunshotmatch.peak import PeakList, filter_peaks
+from libgunshotmatch.utils import round_rt
 
 
 @pytest.mark.parametrize(
@@ -26,7 +27,12 @@ from libgunshotmatch.peak import PeakList, filter_peaks
 				"ELEY_5_SUBTRACT.JDX",
 				]
 		)
-def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFileRegressionFixture, monkeypatch):
+def test_datafile_from_jdx(
+		filename: str,
+		advanced_file_regression: AdvancedFileRegressionFixture,
+		advanced_data_regression: AdvancedDataRegressionFixture,
+		monkeypatch,
+		):
 	monkeypatch.setenv("USERNAME", "test-user")
 
 	method = Method()
@@ -64,10 +70,9 @@ def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFile
 			sdjson.dumps(datafile.intensity_matrix.mass_list, indent=2),
 			extension=".im-masses.json",
 			)
-	advanced_file_regression.check(
-			sdjson.dumps(datafile.intensity_matrix.intensity_array.tolist(), indent=2),
-			extension=".im-intensities.json",
-			)
+	advanced_data_regression.check([[str(round_rt(intensity))
+										for intensity in row]
+									for row in datafile.intensity_matrix.intensity_array], )
 
 
 @pytest.mark.parametrize(
