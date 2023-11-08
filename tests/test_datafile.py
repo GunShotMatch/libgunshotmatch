@@ -56,13 +56,18 @@ def test_datafile_from_jdx(filename: str, advanced_file_regression: AdvancedFile
 
 	advanced_file_regression.check(sdjson.dumps(as_dict), extension=".json")
 
-	im_as_dict = {
-			"times": datafile.intensity_matrix.time_list,
-			"masses": datafile.intensity_matrix.mass_list,
-			"intensities": datafile.intensity_matrix.intensity_array.tolist(),
-			}
-
-	advanced_file_regression.check(sdjson.dumps(im_as_dict, indent=2), extension=".im.json")
+	advanced_file_regression.check(
+			sdjson.dumps(datafile.intensity_matrix.time_list, indent=2),
+			extension=".im-times.json",
+			)
+	advanced_file_regression.check(
+			sdjson.dumps(datafile.intensity_matrix.mass_list, indent=2),
+			extension=".im-masses.json",
+			)
+	advanced_file_regression.check(
+			sdjson.dumps(datafile.intensity_matrix.intensity_array.tolist(), indent=2),
+			extension=".im-intensities.json",
+			)
 
 
 @pytest.mark.parametrize(
