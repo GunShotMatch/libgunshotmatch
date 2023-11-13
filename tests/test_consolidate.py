@@ -19,6 +19,7 @@ from libgunshotmatch.project import Project
 
 @_representer_for(
 		numpy.int64,
+		numpy.int32,
 		numpy.float64,
 		)
 def _represent_mappings(dumper: RegressionYamlDumper, data: int):  # noqa: MAN002
