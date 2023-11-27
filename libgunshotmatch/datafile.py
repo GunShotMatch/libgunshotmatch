@@ -519,6 +519,7 @@ class Repeat:
 		:param filename: The input filename.
 
 		:rtype:
+
 		.. versionadded:: 0.4.0
 		"""
 

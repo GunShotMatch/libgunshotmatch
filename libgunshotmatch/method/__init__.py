@@ -171,7 +171,7 @@ class PeakDetectionMethod(MethodBase):
 	#: Number of scans over which to consider a maxima to be a peak.
 	points: int = Integer.field(default=10)
 
-	#: Number of scans to combine peaks from to compensate for spectra skewing.
+	#: Number of scans to combine in a single peak from to compensate for spectra skewing.
 	scans: int = Integer.field(default=1)
 
 
