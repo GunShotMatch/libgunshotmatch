@@ -135,29 +135,35 @@ class Datafile:
 				name=name,
 				date_created=date_created,
 				date_modified=date_modified,
-				original_filename=os.fspath(filename),
+				original_filename=filename_p.resolve().as_posix(),
 				original_filetype=original_filetype,
 				)
 
-	def load_gcms_data(self) -> GCMS_data:
+	def load_gcms_data(self, filename: Optional[PathLike] = None) -> GCMS_data:
 		"""
 		Load GC-MS data from the datafile.
+
+		:param filename: Alternative filename to load the data from. Useful if the file has moved since the :class:`~.Datafile` was created.
+
+		.. versionchanged:: 0.4.0  Added the ``filename`` attribute.
 		"""
+
+		filename = filename or self.original_filename
 
 		if self.original_filetype == FileType.JDX:
 			# 3rd party
 			from pyms.GCMS.IO.JCAMP import JCAMP_reader  # type: ignore[import]
-			gcms_data = JCAMP_reader(self.original_filename)
+			gcms_data = JCAMP_reader(filename)
 
 		elif self.original_filetype == FileType.MZML:
 			# 3rd party
 			from pyms.GCMS.IO.MZML import mzML_reader  # type: ignore[import]
-			gcms_data = mzML_reader(self.original_filename)
+			gcms_data = mzML_reader(filename)
 
 		elif self.original_filetype == FileType.ANDI:
 			# 3rd party
 			from pyms.GCMS.IO.ANDI import ANDI_reader  # type: ignore[import]
-			gcms_data = ANDI_reader(self.original_filename)
+			gcms_data = ANDI_reader(filename)
 
 		else:
 			# Shouldn't get here due to filetype validation at attrs' end
