@@ -426,6 +426,18 @@ class Repeat:
 	#: File format version
 	version: int = attr.field(default=1)
 
+	@property
+	def name(self) -> str:
+		"""
+		The name of the :class:`~.Datafile`.
+
+		:rtype:
+
+		.. versionadded:: 0.4.0
+		"""
+
+		return self.datafile.name
+
 	def to_dict(self) -> Dict[str, Any]:
 		"""
 		Returns a dictionary representation of this :class:`~.Repeat`.
