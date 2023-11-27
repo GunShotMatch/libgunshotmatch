@@ -15,7 +15,6 @@ from pyms.Peak.Function import peak_sum_area  # type: ignore[import]
 from libgunshotmatch.datafile import Datafile, Repeat
 from libgunshotmatch.method import Method
 from libgunshotmatch.peak import PeakList, filter_peaks
-from libgunshotmatch.utils import round_rt
 
 
 @pytest.mark.parametrize(
@@ -31,7 +30,6 @@ from libgunshotmatch.utils import round_rt
 def test_datafile_from_jdx(
 		filename: str,
 		advanced_file_regression: AdvancedFileRegressionFixture,
-		advanced_data_regression: AdvancedDataRegressionFixture,
 		monkeypatch,
 		):
 	monkeypatch.setenv("USERNAME", "test-user")

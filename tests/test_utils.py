@@ -8,7 +8,6 @@ from typing import List
 import numpy
 import pytest
 import yaml
-from coincidence.regressions import AdvancedDataRegressionFixture
 
 # this package
 from libgunshotmatch.utils import get_truncated_normal, round_rt
@@ -56,9 +55,8 @@ def test_round_rt():
 				[10541006.476190472, 8163470.380952374, 8866116.33333333, 16286094.095238086, 16093095.523809502],
 				]
 		)
-def test_get_truncated_normal(
-		datadir, request, values: List[float], advanced_data_regression: AdvancedDataRegressionFixture
-		):
+@pytest.mark.usefixtures("advanced_data_regression")
+def test_get_truncated_normal(datadir, request, values: List[float]):  # noqa: MAN001
 	with open(datadir / re.sub(r"[\[\]]", '_', f"{request.node.name}.yml"), encoding="utf-8") as fp:
 		expected = yaml.safe_load(fp)
 
