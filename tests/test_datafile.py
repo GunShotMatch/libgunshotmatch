@@ -31,6 +31,7 @@ def test_datafile_from_jdx(
 		filename: str,
 		advanced_file_regression: AdvancedFileRegressionFixture,
 		monkeypatch,
+		tmp_pathplus: PathPlus
 		):
 	monkeypatch.setenv("USERNAME", "test-user")
 
@@ -70,6 +71,9 @@ def test_datafile_from_jdx(
 			extension=".im-masses.json",
 			)
 	# advanced_data_regression.check([[str(round_rt(intensity)) for intensity in row] for row in datafile.intensity_matrix.intensity_array])
+
+	datafile.export(tmp_pathplus)
+	assert (tmp_pathplus / (datafile.name + ".gsmd")).is_file()
 
 
 @pytest.mark.parametrize(
