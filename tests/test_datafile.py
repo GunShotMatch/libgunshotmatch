@@ -1,4 +1,5 @@
 # stdlib
+import datetime
 import os
 
 # 3rd party
@@ -11,7 +12,7 @@ from pyms.GCMS.Class import GCMS_data  # type: ignore[import]
 from pyms.Peak.Function import peak_sum_area  # type: ignore[import]
 
 # this package
-from libgunshotmatch.datafile import Datafile
+from libgunshotmatch.datafile import Datafile, Repeat
 from libgunshotmatch.method import Method
 from libgunshotmatch.peak import PeakList, filter_peaks
 from libgunshotmatch.utils import round_rt
@@ -144,3 +145,32 @@ def test_peaks(advanced_data_regression: AdvancedDataRegressionFixture, monkeypa
 	assert peak_list.datafile_name == "ELEY_4_SUBTRACT"
 	# TODO: advanced_data_regression.check(peak_list.to_list())
 	# repeat = Repeat(datafile, peak_list)
+
+
+@pytest.mark.parametrize(
+		"name", [
+				"ELEY_1_SUBTRACT",
+				"ELEY_2_SUBTRACT",
+				"ELEY_3_SUBTRACT",
+				"ELEY_4_SUBTRACT",
+				"ELEY_5_SUBTRACT",
+				]
+		)
+def test_create_repeat(name: str, tmp_pathplus: PathPlus):
+	path = PathPlus(__file__).parent / f"{name}.gsmd"
+	jdx_path = PathPlus(__file__).parent / f"{name}.JDX"
+	datafile = Datafile.from_file(path)
+	gcms_data: GCMS_data = datafile.load_gcms_data(jdx_path)
+	method = Method()
+	peak_list = prepare_peak_list(datafile, gcms_data, method)
+	repeat = Repeat(
+			datafile,
+			peak_list,
+			user="foo",
+			device="bar",
+			date_created=datetime.datetime.fromtimestamp(0),
+			date_modified=datetime.datetime.fromtimestamp(0),
+			)
+	repeat.export(tmp_pathplus)
+	assert (tmp_pathplus / (datafile.name + ".gsmr")).is_file()
+	Repeat.from_file(tmp_pathplus / (datafile.name + ".gsmr"))

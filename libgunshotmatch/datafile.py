@@ -479,3 +479,30 @@ class Repeat:
 				qualified_peaks=qualified_peaks,
 				**optional_keys,
 				)
+
+	def export(self, output_dir: PathLike) -> str:
+		"""
+		Export as a ``.gsmr`` file.
+
+		:returns: The output filename.
+
+		.. versionadded:: 0.4.0
+		"""
+
+		export_filename = os.path.join(output_dir, f"{self.name}.gsmr")
+		gzip_util.write_gzip_json(export_filename, self.to_dict(), indent=0)
+		return export_filename
+
+	@classmethod
+	def from_file(cls: Type["Repeat"], filename: PathLike) -> "Repeat":
+		"""
+		Parse a ``gsmr`` file.
+
+		:param filename: The input filename.
+
+		:rtype:
+		.. versionadded:: 0.4.0
+		"""
+
+		as_dict: Dict[str, Any] = gzip_util.read_gzip_json(filename)  # type: ignore[assignment]
+		return cls.from_dict(as_dict)
