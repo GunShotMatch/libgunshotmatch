@@ -48,3 +48,6 @@ github_ci_requirements:
 sphinx_conf_epilogue:
   - nitpicky = True
   - toctree_plus_types.update({"method", "attribute"})
+
+tox_unmanaged:
+ - pytest
