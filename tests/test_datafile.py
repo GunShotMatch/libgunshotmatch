@@ -176,3 +176,4 @@ def test_create_repeat(name: str, tmp_pathplus: PathPlus):
 	repeat.export(tmp_pathplus)
 	assert (tmp_pathplus / (datafile.name + ".gsmr")).is_file()
 	Repeat.from_file(tmp_pathplus / (datafile.name + ".gsmr"))
+	assert repeat.peaks.datafile_name is not None

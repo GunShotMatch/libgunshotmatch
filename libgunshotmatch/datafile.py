@@ -472,6 +472,7 @@ class Repeat:
 		datafile = Datafile.from_dict(d["datafile"])
 
 		peaks = PeakList(peak_from_dict(peak) for peak in d["peaks"])
+		peaks.datafile_name = datafile.name
 
 		qualified_peaks_as_list = d["qualified_peaks"]
 		if qualified_peaks_as_list is None:
