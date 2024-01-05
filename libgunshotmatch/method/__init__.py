@@ -148,7 +148,8 @@ class IntensityMatrixMethod(MethodBase):
 	#: The range of masses to which the GC-MS data should be limited to.
 	crop_mass_range: Optional[Tuple[int, int]] = attr.field(default=(50, 500), converter=convert_crop_mass_range)
 
-	#: Whether to perform Savitzky-Golay smoothing.
+	# Whether to perform Savitzky-Golay smoothing.
+	#: Settings for Savitzky-Golay smoothing.
 	savitzky_golay: SavitzkyGolayMethod = attr.field(
 			default=SavitzkyGolayMethod(),
 			converter=_convert_sg_method,
