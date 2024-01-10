@@ -438,7 +438,7 @@ def filter_aligned_peaks(
 	Filter aligned peaks by minimum average peak area, and to the top ``n`` largest peaks.
 
 	:param alignment:
-	:param top_n_peaks: Filter to the largest ``n`` peaks.
+	:param top_n_peaks: Filter to the largest ``n`` peaks. If ``0`` all peaks are included.
 	:param min_peak_area: Exclude aligned peaks with an average peak area below this threshold.
 
 	:returns: :class:`pandas.DataFrame` giving the retention times of the aligned peaks.
@@ -458,17 +458,22 @@ def filter_aligned_peaks(
 	area_alignment = area_alignment.sort_values(by="mean")
 
 	########
-
-	print(f"Filtering to the largest {top_n_peaks} peaks with an average peak area above {min_peak_area}")
-
 	# Get indices of largest n peaks based on `ident_top_peaks`
 	top_peaks_indices = []
-	# print("tail of area_alignment=", area_alignment.tail(top_n_peaks))
 
-	# Limit to the largest `ident_top_peaks` peaks
-	for peak_no, areas in area_alignment.tail(top_n_peaks).iterrows():
-		# Ignore peak if average peak area is less then min_peak_area
-		if areas["mean"] >= min_peak_area:
+	if top_n_peaks:
+		print(f"Filtering to the largest {top_n_peaks} peaks with an average peak area above {min_peak_area}")
+
+		# print("tail of area_alignment=", area_alignment.tail(top_n_peaks))
+
+		# Limit to the largest `ident_top_peaks` peaks
+		for peak_no, areas in area_alignment.tail(top_n_peaks).iterrows():
+			# Ignore peak if average peak area is less then min_peak_area
+			if areas["mean"] >= min_peak_area:
+				top_peaks_indices.append(peak_no)
+
+	else:
+		for peak_no, _ in area_alignment.iterrows():
 			top_peaks_indices.append(peak_no)
 
 	# Remove peaks from rt_alignment if they are not in top_peaks_indices,
