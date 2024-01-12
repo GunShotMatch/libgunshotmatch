@@ -548,13 +548,15 @@ def match_counter(
 	aligned_peaks = []
 	consolidated_peaks = []
 
-	for n in peak_numbers:
+	for idx, peak_no in enumerate(peak_numbers):
+		# idx relates to the position in the QualifiedPeak lists for each repeat.
+		# peak_no correlates to the ``peak_number`` attribute of the QualifiedPeak objects
 		row: List[Optional[QualifiedPeak]] = []
 		# for experiment in project.alignment.expr_code:
 		for experiment in qualified_peaks:
 			assert experiment is not None
 			for peak in experiment:
-				if peak.peak_number == n:
+				if peak.peak_number == peak_no:
 					row.append(peak)
 					break
 			else:
@@ -648,8 +650,8 @@ def match_counter(
 				area_data,
 				ms_data,
 				hits=hits_data,
-				ms_comparison=ms_comp_data.loc[n],
-				meta={"peak_number": n}
+				ms_comparison=ms_comp_data.loc[peak_no],
+				meta={"peak_number": idx}  # The position of the peaks in the QualifiedPeak lists
 				)
 
 		# consolidated_peak.hits = hits_data  # [:n_hits]
