@@ -82,12 +82,34 @@ class MethodBase:
 
 		return cls(**method)
 
-	def to_dict(self) -> Dict[str, Any]:
+	def to_dict(self, skip_defaults: bool = False) -> Dict[str, Any]:
 		"""
 		Convert a :class:`~.MethodBase` to a dictionary.
 		"""
 
-		return attr.asdict(self, recurse=True)  # type: ignore[arg-type]  # This is an ABC but not an attrs class.
+		defaults = {}
+
+		if skip_defaults:
+			for attrib in self.__class__.__attrs_attrs__:
+				if isinstance(attrib.default, attr.Factory):
+					default = attrib.default.factory()
+				else:
+					default = attrib.default
+				print(attrib.name, default)
+				defaults[attrib.name] = default
+
+		as_dict = attr.asdict(
+				self, recurse=False
+				)  # type: ignore[arg-type]  # This is an ABC but not an attrs class.
+		for k, v in list(as_dict.items()):
+			if skip_defaults and v == defaults[k]:
+				del as_dict[k]
+				continue
+			if isinstance(v, MethodBase):
+				# if hasattr(v, "to_dict"):
+				as_dict[k] = v.to_dict(skip_defaults)
+
+		return as_dict
 
 	@classmethod
 	def _coerce(cls: Type[_MB], method: Any) -> _MB:
