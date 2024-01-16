@@ -214,8 +214,12 @@ class AlignmentMethod(MethodBase):
 	#: Gap parameter for pairwise alignments.
 	gap_penalty: float = Number.field(default=0.3)
 
-	#: Minimum number of peaks required for the alignment position to survive filtering.
 	min_peaks: int = Integer.field(default=1)
+	"""
+	Minimum number of peaks required for the alignment position to survive filtering.
+
+	If set to ``-1`` the number of repeats in the project are used.
+	"""
 
 	#: Number of peaks (starting with the largest) to include in the output.
 	top_n_peaks: int = Integer.field(default=80)

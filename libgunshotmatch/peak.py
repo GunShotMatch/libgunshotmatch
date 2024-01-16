@@ -361,6 +361,7 @@ def align_peaks(
 	:param rt_modulation: Retention time tolerance parameter for pairwise alignments.
 	:param gap_penalty: Gap parameter for pairwise alignments.
 	:param min_peaks: Minimum number of peaks required for the alignment position to survive filtering.
+		If set to ``-1`` the number of repeats in the project are used.
 	"""
 
 	print("\nAligning\n")
@@ -380,6 +381,9 @@ def align_peaks(
 			rt_modulation,
 			gap_penalty,
 			)
+
+	if min_peaks == -1:
+		min_peaks = len(expr_list)
 
 	A1: Alignment = align_with_tree(T1, min_peaks=min_peaks)
 
