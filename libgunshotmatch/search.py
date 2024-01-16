@@ -52,7 +52,7 @@ def identify_peaks(
 	Identify the peaks in ``peak_list`` where their retention times are in ``peaks_to_identify``.
 
 	:param engine:
-	:param peaks_to_identify:
+	:param peaks_to_identify: List of retention times of peaks to identify.
 	:param peak_list:
 	:param n_hits: The number of hits to return for each peak.
 	:param verbose: Enable debug logging

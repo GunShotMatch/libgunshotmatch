@@ -455,6 +455,10 @@ class ConsolidatedPeak:
 		yield from self.to_dict().items()
 
 	def __len__(self) -> int:
+		"""
+		How many instances of the peak make up this :~.ConsolidatedPeak`.
+		"""
+
 		return numpy.count_nonzero(~numpy.isnan(self.rt_list))
 
 	@classmethod
