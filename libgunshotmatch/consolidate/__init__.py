@@ -692,7 +692,7 @@ class ConsolidatedPeakFilter:
 
 	Consolidated peaks where the most common hit appears fewer times than this will be excluded.
 
-	If set to ``-1`` this number of repeats in the project are used.
+	If set to ``-1`` the number of instances of the peak in the project are used.
 	"""
 
 	#: If :py:obj:`True` details of excluded peaks will be printed.
@@ -732,7 +732,13 @@ class ConsolidatedPeakFilter:
 
 		hit = peak.hits[0]
 
-		if len(hit) < self.min_appearances:
+		if self.min_appearances == -1:
+			# Set to how many times the peak appears
+			min_appearances = len(peak)
+		else:
+			min_appearances = self.min_appearances
+
+		if len(hit) < min_appearances:
 			self.print_skip_reason(peak, f"top hit {hit.name!r} only appears {len(hit)} times")
 			return True
 

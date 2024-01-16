@@ -230,9 +230,9 @@ class ConsolidateMethod(MethodBase):
 	"""
 	Method used for consolidation (finding most likely identity for aligned peaks).
 
-	:param min_appearances: Number of times the hit must appear across individual the aligned peaks.
+	:param min_appearances: Number of times the hit must appear across the individual aligned peaks.
 		Consolidated peaks where the most common hit appears fewer times than this will be excluded.
-		If set to ``-1`` this number of repeats in the project are used.
+		If set to ``-1`` the number of instances of the peak in the project are used.
 
 	.. versionchanged:: 0.2.0  Added the ``min_appearances`` argument.
 	"""
@@ -253,11 +253,11 @@ class ConsolidateMethod(MethodBase):
 
 	min_appearances: int = Integer.field(default=-1)
 	"""
-	Number of times the hit must appear across individual the aligned peaks.
+	Number of times the hit must appear across the individual aligned peaks.
 
 	Consolidated peaks where the most common hit appears fewer times than this will be excluded.
 
-	If set to ``-1`` this number of repeats in the project are used.
+	If set to ``-1`` the number of instances of the peak in the project are used.
 
 	.. versionadded:: 0.2.0
 	"""
