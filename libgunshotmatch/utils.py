@@ -28,7 +28,7 @@ Utility functions.
 
 # stdlib
 from decimal import Decimal
-from typing import Any, Iterable, List, Optional, Sequence, Type, TypeVar, Union
+from typing import TYPE_CHECKING, Any, Iterable, List, Optional, Sequence, Tuple, Type, TypeVar, Union
 
 # 3rd party
 import numpy
@@ -37,7 +37,11 @@ from mathematical.utils import rounders
 from pyms.Spectrum import MassSpectrum  # type: ignore[import]
 from scipy.stats import truncnorm  # type: ignore[import]
 
-__all__ = ("round_rt", "get_truncated_normal", "ms_comparison")
+if TYPE_CHECKING:
+	# this package
+	from libgunshotmatch.project import Project
+
+__all__ = ("round_rt", "get_truncated_normal", "ms_comparison", "get_rt_range")
 
 
 def round_rt(rt: Union[str, float, Decimal]) -> Decimal:
@@ -136,3 +140,29 @@ def _to_list(l: Iterable[str]) -> List[str]:
 	"""
 
 	return list(l)
+
+
+def get_rt_range(project: "Project") -> Tuple[float, float]:
+	"""
+	Returns the minimum and maximum retention times (in minutes) across the repeats.
+
+	:param project:
+
+	:rtype:
+
+	,, versionadded:: 0.7.0
+	"""
+
+	# Get RT extremes from intensity matrix
+	min_rts, max_rts = [], []
+	for repeat in project.datafile_data.values():
+		im = repeat.datafile.intensity_matrix
+		assert im is not None
+		times = im.time_list
+		min_rts.append(times[0])
+		max_rts.append(times[-1])
+
+	min_rt = min(min_rts) / 60
+	max_rt = max(max_rts) / 60
+
+	return min_rt, max_rt

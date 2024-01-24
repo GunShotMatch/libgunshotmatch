@@ -8,9 +8,11 @@ from typing import List
 import numpy
 import pytest
 import yaml
+from domdf_python_tools.paths import PathPlus
 
 # this package
-from libgunshotmatch.utils import get_truncated_normal, round_rt
+from libgunshotmatch.project import Project
+from libgunshotmatch.utils import get_rt_range, get_truncated_normal, round_rt
 
 
 def test_round_rt():
@@ -76,3 +78,11 @@ def test_get_truncated_normal(datadir, request, values: List[float]):  # noqa: M
 
 
 # TODO: ms_comparison
+
+
+def test_get_rt_range():
+	project_file = PathPlus(__file__).parent / "ELEY .22LR.gsmp"
+	project = Project.from_file(project_file)
+	min_rt, max_rt = get_rt_range(project)
+	assert f"{min_rt:.4f}" == "0.0175"
+	assert f"{max_rt:.4f}" == "37.0127"
