@@ -422,15 +422,17 @@ def write_alignment(
 			)
 
 	rt_alignment = alignment.get_peak_alignment(require_all_expr=require_all_datafiles)
-	rt_alignment.to_json(output_dir_p / f"{project_name}_alignment_rt.json")
+	rt_alignment_filename = output_dir_p / f"{project_name}_alignment_rt.json"
+	rt_alignment_filename.write_clean(rt_alignment)
 
 	area_alignment = alignment.get_area_alignment(require_all_expr=require_all_datafiles)
-	area_alignment.to_json(output_dir_p / f"{project_name}_alignment_area.json")
+	area_alignment_filename = output_dir_p / f"{project_name}_alignment_area.json"
+	area_alignment_filename.write_clean(area_alignment)
 
 	ms_alignment = alignment.get_ms_alignment(require_all_expr=require_all_datafiles)
 	# ms_alignment.to_json(output_dir_p / 'alignment_ms.json')
-	with (output_dir_p / f"{project_name}_alignment_ms.json").open('w') as fp:
-		sdjson.dump(ms_alignment.to_dict(), fp)
+	alignment_ms_filename = (output_dir_p / f"{project_name}_alignment_ms.json")
+	alignment_ms_filename.dump_json(ms_alignment.to_dict(), json_library=sdjson)
 
 
 def filter_aligned_peaks(
