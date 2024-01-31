@@ -432,7 +432,10 @@ def write_alignment(
 	ms_alignment = alignment.get_ms_alignment(require_all_expr=require_all_datafiles)
 	# ms_alignment.to_json(output_dir_p / 'alignment_ms.json')
 	alignment_ms_filename = (output_dir_p / f"{project_name}_alignment_ms.json")
-	alignment_ms_filename.dump_json(ms_alignment.to_dict(), json_library=sdjson)
+	alignment_ms_filename.dump_json(
+			ms_alignment.to_dict(),
+			json_library=sdjson,  # type: ignore
+			)
 
 
 def filter_aligned_peaks(
