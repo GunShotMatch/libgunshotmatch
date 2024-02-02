@@ -476,7 +476,7 @@ class ConsolidatedPeak:
 		return cls(
 				rt_list=d["rt_list"],
 				area_list=d["area_list"],
-				ms_list=d["ms_list"],
+				ms_list=[MassSpectrum.from_dict(msd) for msd in d["ms_list"]],
 				meta=d["meta"],
 				ms_comparison=d["ms_comparison"],
 				hits=hits,
