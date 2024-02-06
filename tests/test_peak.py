@@ -1,6 +1,6 @@
 # 3rd party
-from pyms.Peak import Peak
-from pyms.Spectrum import MassSpectrum
+from pyms.Peak import Peak  # type: ignore[import]
+from pyms.Spectrum import MassSpectrum  # type: ignore[import]
 
 # this package
 from libgunshotmatch.peak import QualifiedPeak
