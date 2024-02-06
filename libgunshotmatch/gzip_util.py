@@ -28,7 +28,7 @@ Read and write gzipped JSON.
 
 # stdlib
 import gzip
-from typing import Any, Dict, List, OrderedDict, Tuple, Union
+from typing import Any, Dict, List, Optional, OrderedDict, Tuple, Union
 
 # 3rd party
 import sdjson
@@ -54,7 +54,7 @@ def read_gzip_json(path: PathLike) -> JSONOutput:
 		return sdjson.load(f)
 
 
-def write_gzip_json(path: PathLike, data: JSONInput, indent: int = 2) -> None:
+def write_gzip_json(path: PathLike, data: JSONInput, indent: Optional[int] = 2) -> None:
 	"""
 	Write JSON to a gzip file.
 

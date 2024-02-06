@@ -108,7 +108,7 @@ class Project:
 		"""
 
 		export_filename = os.path.join(output_dir, f"{self.name}.gsmp")
-		gzip_util.write_gzip_json(export_filename, self.to_dict(), indent=0)
+		gzip_util.write_gzip_json(export_filename, self.to_dict(), indent=None)
 		return export_filename
 
 	@classmethod
