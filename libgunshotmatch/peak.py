@@ -476,17 +476,15 @@ def filter_aligned_peaks(
 		# print("tail of area_alignment=", area_alignment.tail(top_n_peaks))
 
 		# Limit to the largest `top_n_peaks` peaks
-		for peak_no, areas in area_alignment.tail(top_n_peaks).iterrows():
-			# Ignore peak if average peak area is less then min_peak_area
-			if areas["mean"] >= min_peak_area:
-				top_peaks_indices.append(peak_no)
+		area_alignment = area_alignment.tail(top_n_peaks)
 
 	else:
 		print(f"Filtering to peaks with an average peak area above {min_peak_area}")
-		for peak_no, areas in area_alignment.iterrows():
-			# Ignore peak if average peak area is less then min_peak_area
-			if areas["mean"] >= min_peak_area:
-				top_peaks_indices.append(peak_no)
+
+	for peak_no, areas in area_alignment.iterrows():
+		# Ignore peak if average peak area is less then min_peak_area
+		if areas["mean"] >= min_peak_area:
+			top_peaks_indices.append(peak_no)
 
 	# Remove peaks from rt_alignment if they are not in top_peaks_indices,
 	# i.e. they are one of the largest n largest peaks
