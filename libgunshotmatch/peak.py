@@ -483,7 +483,7 @@ def filter_aligned_peaks(
 
 	else:
 		print(f"Filtering to peaks with an average peak area above {min_peak_area}")
-		for peak_no, _ in area_alignment.iterrows():
+		for peak_no, areas in area_alignment.iterrows():
 			# Ignore peak if average peak area is less then min_peak_area
 			if areas["mean"] >= min_peak_area:
 				top_peaks_indices.append(peak_no)
