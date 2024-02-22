@@ -10,6 +10,7 @@ version: '0.7.3'
 license: 'MIT'
 short_desc: 'Base library for GunShotMatch.'
 
+enable_devmode: false
 enable_conda: false
 
 use_whey: true
