@@ -440,7 +440,7 @@ def write_alignment(
 	alignment_ms_filename = (output_dir_p / f"{project_name}_alignment_ms.json")
 	alignment_ms_filename.dump_json(
 			ms_alignment.to_dict(),
-			json_library=sdjson,  # type: ignore
+			json_library=sdjson,  # type: ignore[arg-type]
 			)
 
 
