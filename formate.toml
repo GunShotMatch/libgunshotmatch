@@ -55,4 +55,4 @@ known_third_party = [
     "tomli",
     "tomli_w",
 ]
-known_first_party = "libgunshotmatch"
+known_first_party = [ "libgunshotmatch",]
