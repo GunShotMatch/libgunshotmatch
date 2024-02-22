@@ -27,8 +27,8 @@ Functions for combining peak identifications across aligned peaks into a single 
 #
 
 # stdlib
-import fnmatch
 from collections import Counter
+from fnmatch import fnmatch
 from itertools import permutations
 from multiprocessing import Pool
 from typing import Any, Dict, Iterator, List, Mapping, Optional, Tuple, Type, Union, cast
@@ -521,10 +521,7 @@ def pairwise_ms_comparisons(alignment: Alignment, parallel: bool = True) -> pand
 
 	# Convert list of (peak_number, comparisons) pairs to data frame
 	column_labels = ["{} & {}".format(*perm) for perm in perms]
-	comparison_dict = {}
-
-	for peak_number, comparison in ms_comparison:
-		comparison_dict[peak_number] = comparison
+	comparison_dict = dict(ms_comparison)
 
 	comparison_df = pandas.DataFrame.from_dict(data=comparison_dict, columns=column_labels, orient="index")
 
@@ -753,8 +750,9 @@ class ConsolidatedPeakFilter:
 			self.print_skip_reason(peak, f"top hit {hit.name!r} only appears {len(hit)} times")
 			return True
 
+		hit_name = hit.name.lower()
 		for nf in self.name_filter:
-			if fnmatch.fnmatch(hit.name.lower(), nf):
+			if fnmatch(hit_name, nf):
 				self.print_skip_reason(peak, f"name {hit.name!r} matches {nf!r}")
 				return True
 
@@ -773,10 +771,4 @@ class ConsolidatedPeakFilter:
 		:param consolidated_peaks:
 		"""
 
-		filtered_consolidated_peaks = []
-
-		for cp in consolidated_peaks:
-			if not self.should_filter_peak(cp):
-				filtered_consolidated_peaks.append(cp)
-
-		return filtered_consolidated_peaks
+		return [cp for cp in consolidated_peaks if not self.should_filter_peak(cp)]
