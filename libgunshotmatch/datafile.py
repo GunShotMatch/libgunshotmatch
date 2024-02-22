@@ -49,7 +49,7 @@ from libgunshotmatch import gzip_util
 from libgunshotmatch.method import SavitzkyGolayMethod
 from libgunshotmatch.peak import PeakList, QualifiedPeak, _to_peak_list, peak_from_dict
 
-__all__ = ["Datafile", "FileType", "Repeat", "get_info_from_gcms_data", "GCMSDataInfo"]
+__all__ = ("Datafile", "FileType", "Repeat", "get_info_from_gcms_data", "GCMSDataInfo")
 
 
 class FileType(IntEnum):
@@ -189,6 +189,7 @@ class Datafile:
 		:param crop_mass_range: The range of masses to which the GC-MS data should be limited to.
 
 		"""
+
 		intensity_matrix = build_intensity_matrix_i(gcms_data)
 
 		# Show the m/z of the maximum and minimum bins

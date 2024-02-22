@@ -46,7 +46,7 @@ from pyms.Peak.List.Function import sele_peaks_by_rt  # type: ignore[import]
 from pyms.Spectrum import MassSpectrum  # type: ignore[import]
 from pyms_nist_search import SearchResult
 
-__all__ = [
+__all__ = (
 		"PeakList",
 		"QualifiedPeak",
 		"QualifiedPeakList",
@@ -54,8 +54,8 @@ __all__ = [
 		"filter_aligned_peaks",
 		"filter_peaks",
 		"peak_from_dict",
-		"write_alignment"
-		]
+		"write_alignment",
+		)
 
 
 class QualifiedPeak(Peak):

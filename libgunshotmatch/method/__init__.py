@@ -53,7 +53,7 @@ from libgunshotmatch.method._fields import (
 		)
 from libgunshotmatch.utils import _fix_init_annotations, _to_list
 
-__all__ = [
+__all__ = (
 		"MethodBase",
 		"Method",
 		"IntensityMatrixMethod",
@@ -62,7 +62,7 @@ __all__ = [
 		"AlignmentMethod",
 		"ConsolidateMethod",
 		"SavitzkyGolayMethod",
-		]
+		)
 
 _MB = TypeVar("_MB", bound="MethodBase")
 

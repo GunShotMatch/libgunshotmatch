@@ -38,7 +38,7 @@ from pyms.Peak.Class import Peak  # type: ignore[import]
 from libgunshotmatch.peak import QualifiedPeak
 from libgunshotmatch.utils import round_rt
 
-__all__ = ["identify_peaks"]
+__all__ = ("identify_peaks", )
 
 
 def identify_peaks(

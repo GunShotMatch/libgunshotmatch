@@ -35,7 +35,7 @@ import sdjson
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 
-__all__ = ["read_gzip_json", "write_gzip_json"]
+__all__ = ("read_gzip_json", "write_gzip_json")
 
 JSONOutput = Union[str, int, float, bool, None, Dict[str, Any], List[Any]]
 JSONInput = Union[JSONOutput, Tuple[Any, ...], OrderedDict]

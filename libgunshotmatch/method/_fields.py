@@ -33,7 +33,7 @@ from typing import Any, Generic, Iterable, Optional, Set, Tuple, Type, TypeVar, 
 import attr
 from pyms.Utils.Time import time_str_secs  # type: ignore[import]
 
-__all__ = [
+__all__ = (
 		"Boolean",
 		"FieldType",
 		"Integer",
@@ -42,7 +42,7 @@ __all__ = [
 		"convert_crop_mass_range",
 		"convert_rt_range",
 		"default_base_peak_filter"
-		]
+		)
 
 _FT = TypeVar("_FT")
 
