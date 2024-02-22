@@ -246,6 +246,9 @@ class ConsolidatedPeak:
 	:param hits: Optional list of possible identities for this peak.
 	:param ms_comparison: Mapping or Pandas :class:`~pandas.Series` giving pairwise mass spectral comparison scores.
 	:param meta: Optional dictionary for storing e.g. peak number or whether the peak should be hidden.
+
+	.. latex:clearpage::
+	.. autosummary-widths:: 3/10
 	"""
 
 	#: List of retention times of the aligned peaks.
@@ -456,7 +459,7 @@ class ConsolidatedPeak:
 
 	def __len__(self) -> int:
 		"""
-		How many instances of the peak make up this :~.ConsolidatedPeak`.
+		How many instances of the peak make up this :class:`~.ConsolidatedPeak`.
 		"""
 
 		return numpy.count_nonzero(~numpy.isnan(self.rt_list))
@@ -692,7 +695,7 @@ class ConsolidatedPeakFilter:
 
 	min_appearances: int = Integer.field(default=-1)
 	"""
-	Number of times the hit must appear across individual the aligned peaks.
+	Number of times the hit must appear across the individual aligned peaks.
 
 	Consolidated peaks where the most common hit appears fewer times than this will be excluded.
 
@@ -708,6 +711,10 @@ class ConsolidatedPeakFilter:
 		Construct a :class:`~.ConsolidatedPeakFilter` from a :class:`~.ConsolidateMethod`.
 
 		:param method:
+
+		:rtype:
+
+		.. latex:clearpage::
 		"""
 
 		return cls(

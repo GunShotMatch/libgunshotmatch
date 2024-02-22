@@ -54,6 +54,16 @@ def preprocess_class_defaults(
 						default = singleton("getpass.getuser()")
 					elif argname == "device":
 						default = singleton("socket.gethostname()")
+					elif argname == "intensity_matrix":
+						default = singleton("IntensityMatrixMethod()")
+					elif argname == "peak_detection":
+						default = singleton("PeakDetectionMethod()")
+					elif argname == "peak_filter":
+						default = singleton("PeakFilterMethod()")
+					elif argname == "alignment":
+						default = singleton("AlignmentMethod()")
+					elif argname == "consolidate":
+						default = singleton("ConsolidateMethod()")
 
 		parameters.append(param.replace(annotation=inspect.Parameter.empty, default=default))
 
@@ -70,7 +80,11 @@ def process_signature(  # noqa: MAN001
 		return_annotation: Any,
 		) -> Optional[Tuple[str, None]]:
 
-	if name not in {"libgunshotmatch.datafile.Datafile", "libgunshotmatch.datafile.Repeat"}:
+	if name not in {
+			"libgunshotmatch.datafile.Datafile",
+			"libgunshotmatch.datafile.Repeat",
+			"libgunshotmatch.method.Method"
+			}:
 		return sphinx_toolbox.more_autodoc.typehints.process_signature(
 				app, what, name, obj, options, signature, return_annotation
 				)

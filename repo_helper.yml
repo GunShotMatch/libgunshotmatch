@@ -33,6 +33,7 @@ extra_sphinx_extensions:
   - enum_tools.autoenum
   - attr_utils.autoattrs
   - remove_factory_defaults
+  - sphinx_toolbox.more_autosummary.column_widths
 
 github_ci_requirements:
  Linux:
@@ -48,6 +49,7 @@ github_ci_requirements:
 sphinx_conf_epilogue:
   - nitpicky = True
   - toctree_plus_types.update({"method", "attribute"})
+  - autosummary_widths_builders = ["latex"]
 
 tox_unmanaged:
  - pytest

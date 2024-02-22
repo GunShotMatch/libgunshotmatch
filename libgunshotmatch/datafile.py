@@ -322,9 +322,7 @@ class Datafile:
 
 	def export(self, output_dir: PathLike) -> str:
 		"""
-		Export as a ``.gsmd`` file.
-
-		:returns: The output filename.
+		Export as a ``.gsmd`` file and return the output filename.
 		"""
 
 		export_filename = os.path.join(output_dir, f"{self.name}.gsmd")
@@ -345,7 +343,7 @@ class Datafile:
 
 class GCMSDataInfo(NamedTuple):
 	"""
-	Represents information about a :class:`pyms.GCMS.Class.GCMS_data` object returned by :func:`get_info_from_gcms_data`.
+	Represents information about a :class:`~pyms.GCMS.Class.GCMS_data` object returned by :func:`get_info_from_gcms_data`.
 	"""
 
 	#: The minimum and maximum retention times.
@@ -502,9 +500,7 @@ class Repeat:
 
 	def export(self, output_dir: PathLike) -> str:
 		"""
-		Export as a ``.gsmr`` file.
-
-		:returns: The output filename.
+		Export as a ``.gsmr`` file and return the output filename.
 
 		.. versionadded:: 0.4.0
 		"""

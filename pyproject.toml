@@ -92,6 +92,7 @@ extensions = [
     "enum_tools.autoenum",
     "attr_utils.autoattrs",
     "remove_factory_defaults",
+    "sphinx_toolbox.more_autosummary.column_widths",
 ]
 sphinxemoji_style = "twemoji"
 gitstamp_fmt = "%d %b %Y"

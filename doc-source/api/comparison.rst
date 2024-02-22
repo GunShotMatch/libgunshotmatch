@@ -9,6 +9,9 @@
 
 .. automodule:: libgunshotmatch.comparison.projects
 
+
+.. latex:clearpage::
+
 :mod:`libgunshotmatch.comparison.unknowns`
 -------------------------------------------
 

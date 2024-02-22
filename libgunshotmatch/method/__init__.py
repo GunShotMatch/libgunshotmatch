@@ -272,7 +272,7 @@ class ConsolidateMethod(MethodBase):
 
 def _submethod_field(submethod_type: Type[_MB]) -> _MB:
 	# Actually returns attr.Attribute, but mypy doesn't like it
-	return attr.field(default=attr.Factory(submethod_type), converter=submethod_type._coerce)
+	return attr.field(factory=submethod_type, converter=submethod_type._coerce)
 
 
 @_fix_init_annotations
@@ -280,6 +280,8 @@ def _submethod_field(submethod_type: Type[_MB]) -> _MB:
 class Method(MethodBase):
 	"""
 	Overall GunShotMatch method.
+
+	.. latex:vspace:: 4mm
 	"""
 
 	#: Method used for constructing an intensity matrix from a datafile.

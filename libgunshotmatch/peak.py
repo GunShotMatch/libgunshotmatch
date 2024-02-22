@@ -217,6 +217,8 @@ class QualifiedPeak(Peak):
 class PeakList(List[Peak]):
 	"""
 	Represents a list of peaks.
+
+	.. autosummary-widths:: 35/100
 	"""
 
 	#: String identifier for the datafile the peaks were detected in.
@@ -362,6 +364,10 @@ def align_peaks(
 	:param gap_penalty: Gap parameter for pairwise alignments.
 	:param min_peaks: Minimum number of peaks required for the alignment position to survive filtering.
 		If set to ``-1`` the number of repeats in the project are used.
+
+	:rtype:
+
+	.. latex:clearpage::
 	"""
 
 	print("\nAligning\n")
@@ -500,6 +506,10 @@ def peak_from_dict(d: Dict[str, Any]) -> Peak:
 	Construct a :class:`~pyms.Peak.Class.Peak` from a dictionary.
 
 	:param d:
+
+	:rtype:
+
+	.. latex:clearpage::
 	"""
 
 	peak_obj = Peak(d["rt"], MassSpectrum(**d["mass_spectrum"]), outlier=d["is_outlier"])

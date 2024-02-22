@@ -80,3 +80,4 @@ def setup(app):
 
 nitpicky = True
 toctree_plus_types.update({"method", "attribute"})
+autosummary_widths_builders = ["latex"]

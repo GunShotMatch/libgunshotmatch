@@ -152,7 +152,7 @@ def get_rt_range(project: "Project") -> Tuple[float, float]:
 
 	:rtype:
 
-	,, versionadded:: 0.7.0
+	.. versionadded:: 0.7.0
 	"""
 
 	# Get RT extremes from intensity matrix
