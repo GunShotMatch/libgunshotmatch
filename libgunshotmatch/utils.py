@@ -34,6 +34,8 @@ from typing import TYPE_CHECKING, Any, Iterable, List, Optional, Sequence, Tuple
 import numpy
 from chemistry_tools.spectrum_similarity import SpectrumSimilarity
 from mathematical.utils import rounders
+from pyms.DPA.Alignment import Alignment  # type: ignore[import]
+from pyms.Peak.Class import Peak  # type: ignore[import]
 from pyms.Spectrum import MassSpectrum  # type: ignore[import]
 from scipy.stats import truncnorm  # type: ignore[import]
 
@@ -41,7 +43,7 @@ if TYPE_CHECKING:
 	# this package
 	from libgunshotmatch.project import Project
 
-__all__ = ("round_rt", "get_truncated_normal", "ms_comparison", "get_rt_range")
+__all__ = ("round_rt", "get_truncated_normal", "ms_comparison", "get_rt_range", "create_alignment")
 
 
 def round_rt(rt: Union[str, float, Decimal]) -> Decimal:
@@ -166,3 +168,25 @@ def get_rt_range(project: "Project") -> Tuple[float, float]:
 	max_rt = max(max_rts) / 60
 
 	return min_rt, max_rt
+
+
+def create_alignment(peakpos: Sequence[Sequence[Peak]], expr_code: List[str], similarity: float = 0) -> Alignment:
+	"""
+	Create a new :class:`pyms.DPA.Alignment.Alignment` object.
+
+	:param peakpos: Nested list of aligned peaks. Top level list contains lists of peaks for each experiment in ``expr_code``.
+	:param expr_code: Experiment names. Order must match ``peakpos``.
+	:param similarity:
+
+	:rtype:
+
+	.. versionadded:: 0.8.0
+	"""
+
+	alignment = Alignment(None)
+	alignment.peakpos = peakpos
+	alignment.peakalgt = numpy.transpose(alignment.peakpos).tolist()
+	alignment.expr_code = expr_code
+	alignment.similarity = similarity
+
+	return alignment
