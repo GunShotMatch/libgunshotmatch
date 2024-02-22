@@ -91,7 +91,7 @@ libgunshotmatch
 .. |language| image:: https://img.shields.io/github/languages/top/GunShotMatch/libgunshotmatch
 	:alt: GitHub top language
 
-.. |commits-since| image:: https://img.shields.io/github/commits-since/GunShotMatch/libgunshotmatch/v0.7.3
+.. |commits-since| image:: https://img.shields.io/github/commits-since/GunShotMatch/libgunshotmatch/v0.8.0
 	:target: https://github.com/GunShotMatch/libgunshotmatch/pulse
 	:alt: GitHub commits since tagged version
 
