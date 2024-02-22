@@ -32,7 +32,6 @@ from typing import Any, Dict, List, Mapping, Optional, Type
 
 # 3rd party
 import attr
-import numpy
 import pandas  # type: ignore[import]
 import pyms_nist_search
 from domdf_python_tools.typing import PathLike
@@ -49,6 +48,7 @@ from libgunshotmatch.consolidate import (
 		)
 from libgunshotmatch.datafile import Repeat
 from libgunshotmatch.peak import PeakList, QualifiedPeak, peak_from_dict
+from libgunshotmatch.utils import create_alignment
 
 __all__ = ["Project"]
 
@@ -131,7 +131,6 @@ class Project:
 		"""
 
 		alignment_as_dict = d["alignment"]
-		alignment = Alignment(None)
 		alignment_peaks: List[List[Peak]] = []
 		for row in alignment_as_dict["peaks"]:
 			alignment_peaks.append([])
@@ -141,10 +140,11 @@ class Project:
 
 				alignment_peaks[-1].append(peak_obj)
 
-		alignment.peakpos = alignment_peaks
-		alignment.peakalgt = numpy.transpose(alignment.peakpos).tolist()
-		alignment.expr_code = alignment_as_dict["expr_code"]
-		alignment.similarity = alignment_as_dict["similarity"]
+		alignment = create_alignment(
+				alignment_peaks,
+				alignment_as_dict["expr_code"],
+				alignment_as_dict["similarity"],
+				)
 
 		consolidated_peaks_as_list = d["consolidated_peaks"]
 		if consolidated_peaks_as_list is None:
