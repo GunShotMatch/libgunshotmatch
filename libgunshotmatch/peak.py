@@ -27,23 +27,23 @@ Classes representing peaks, and functions for peak filtering.
 #
 
 # stdlib
-from typing import Any, Collection, Dict, List, Mapping, Optional, Sequence, Type
+from typing import Any, Collection, Dict, List, Mapping, Optional, Sequence, Type, Union
 
 # 3rd party
 import numpy
-import pandas  # type: ignore[import]
+import pandas  # type: ignore[import-untyped]
 import sdjson
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
-from pyms.BillerBiemann import num_ions_threshold  # type: ignore[import]
-from pyms.DPA.Alignment import exprl2alignment  # type: ignore[import]
-from pyms.DPA.PairwiseAlignment import Alignment, PairwiseAlignment, align_with_tree  # type: ignore[import]
-from pyms.Experiment import Experiment  # type: ignore[import]
-from pyms.IonChromatogram import IonChromatogram  # type: ignore[import]
-from pyms.Noise.Analysis import window_analyzer  # type: ignore[import]
-from pyms.Peak.Class import AbstractPeak, ICPeak, Peak  # type: ignore[import]
-from pyms.Peak.List.Function import sele_peaks_by_rt  # type: ignore[import]
-from pyms.Spectrum import MassSpectrum  # type: ignore[import]
+from pyms.BillerBiemann import num_ions_threshold
+from pyms.DPA.Alignment import exprl2alignment
+from pyms.DPA.PairwiseAlignment import Alignment, PairwiseAlignment, align_with_tree
+from pyms.Experiment import Experiment
+from pyms.IonChromatogram import IonChromatogram
+from pyms.Noise.Analysis import window_analyzer
+from pyms.Peak.Class import AbstractPeak, ICPeak, Peak
+from pyms.Peak.List.Function import sele_peaks_by_rt
+from pyms.Spectrum import MassSpectrum
 from pyms_nist_search import SearchResult
 
 __all__ = (
@@ -145,7 +145,7 @@ class QualifiedPeak(Peak):
 			raise TypeError("'peak' must be a Peak object")
 
 		if isinstance(peak, ICPeak):
-			new_peak = cls(peak.rt, peak.ic_mass, False, peak.is_outlier)
+			new_peak = cls(peak.rt, peak.ic_mass, False, peak.is_outlier)  # type: ignore[arg-type]  # TODO
 		else:
 			new_peak = cls(peak.rt, peak.mass_spectrum, False, peak.is_outlier)
 
@@ -169,7 +169,7 @@ class QualifiedPeak(Peak):
 		"""
 
 		try:
-			ion_areas = self.ion_areas
+			ion_areas: Union[Dict, float] = self.ion_areas
 		except ValueError:
 			ion_areas = 0
 

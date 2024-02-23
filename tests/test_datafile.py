@@ -7,9 +7,9 @@ import pytest
 import sdjson
 from coincidence.regressions import AdvancedDataRegressionFixture, AdvancedFileRegressionFixture
 from domdf_python_tools.paths import PathPlus
-from pyms.BillerBiemann import BillerBiemann  # type: ignore[import]
-from pyms.GCMS.Class import GCMS_data  # type: ignore[import]
-from pyms.Peak.Function import peak_sum_area  # type: ignore[import]
+from pyms.BillerBiemann import BillerBiemann
+from pyms.GCMS.Class import GCMS_data
+from pyms.Peak.Function import peak_sum_area
 
 # this package
 from libgunshotmatch.datafile import Datafile, Repeat
@@ -101,6 +101,7 @@ def prepare_peak_list(datafile: Datafile, gcms_data: GCMS_data, method: Method) 
 	"""
 
 	im = datafile.intensity_matrix
+	assert im is not None
 
 	peak_list: PeakList = PeakList(
 			BillerBiemann(

@@ -34,10 +34,10 @@ from typing import TYPE_CHECKING, Any, Iterable, List, Optional, Sequence, Tuple
 import numpy
 from chemistry_tools.spectrum_similarity import SpectrumSimilarity
 from mathematical.utils import rounders
-from pyms.DPA.Alignment import Alignment  # type: ignore[import]
-from pyms.Peak.Class import Peak  # type: ignore[import]
-from pyms.Spectrum import MassSpectrum  # type: ignore[import]
-from scipy.stats import truncnorm  # type: ignore[import]
+from pyms.DPA.Alignment import Alignment
+from pyms.Peak.Class import Peak
+from pyms.Spectrum import MassSpectrum
+from scipy.stats import truncnorm  # type: ignore[import-untyped]
 
 if TYPE_CHECKING:
 	# this package
@@ -184,8 +184,8 @@ def create_alignment(peakpos: Sequence[Sequence[Peak]], expr_code: List[str], si
 	"""
 
 	alignment = Alignment(None)
-	alignment.peakpos = peakpos
-	alignment.peakalgt = numpy.transpose(alignment.peakpos).tolist()
+	alignment.peakpos = [list(p) for p in peakpos]
+	alignment.peakalgt = numpy.transpose(alignment.peakpos).tolist()  # type: ignore[arg-type]
 	alignment.expr_code = expr_code
 	alignment.similarity = similarity
 

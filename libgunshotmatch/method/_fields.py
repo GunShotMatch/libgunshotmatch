@@ -31,7 +31,7 @@ from typing import Any, Generic, Iterable, Optional, Set, Tuple, Type, TypeVar, 
 
 # 3rd party
 import attr
-from pyms.Utils.Time import time_str_secs  # type: ignore[import]
+from pyms.Utils.Time import time_str_secs
 
 __all__ = (
 		"Boolean",
@@ -154,7 +154,7 @@ def convert_crop_mass_range(value: Optional[Iterable]) -> Optional[Tuple[int, in
 		err_msg = f"crop_mass_range must be a 2-element tuple. Got {len(value_as_tuple)} values: {value_as_tuple}"
 		raise ValueError(err_msg)
 
-	return value_as_tuple  # type: ignore[return-value]
+	return value_as_tuple
 
 
 @overload
@@ -192,7 +192,7 @@ def convert_rt_range(value: Optional[Iterable]) -> Optional[Tuple[float, float]]
 	if len(value_as_tuple) != 2:
 		raise ValueError(f"rt_range must be a 2-element tuple. Got {len(value_as_tuple)} values: {value_as_tuple}")
 
-	return value_as_tuple  # type: ignore[return-value]
+	return value_as_tuple
 
 
 def default_base_peak_filter() -> Set[int]:

@@ -36,13 +36,13 @@ from typing import Any, Dict, List, Mapping, NamedTuple, Optional, Tuple, Type, 
 
 # 3rd party
 import attr
-import pyms.Noise.SavitzkyGolay  # type: ignore[import]
-import pyms.TopHat  # type: ignore[import]
+import pyms.Noise.SavitzkyGolay
+import pyms.TopHat
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 from enum_tools import IntEnum
-from pyms.GCMS.Class import GCMS_data  # type: ignore[import]
-from pyms.IntensityMatrix import IntensityMatrix, build_intensity_matrix_i  # type: ignore[import]
+from pyms.GCMS.Class import GCMS_data
+from pyms.IntensityMatrix import IntensityMatrix, build_intensity_matrix_i
 
 # this package
 from libgunshotmatch import gzip_util
@@ -68,7 +68,7 @@ class FileType(IntEnum):
 
 	@classmethod
 	def _attrs_convert(cls: Type["FileType"], value: int) -> "FileType":
-		if value in iter(cls):  # type: ignore[attr-defined, arg-type]
+		if value in iter(cls):  # type: ignore[operator]
 			return cls(value)
 
 		raise ValueError(f"Unrecognised file format {value}")
@@ -148,21 +148,21 @@ class Datafile:
 		.. versionchanged:: 0.4.0  Added the ``filename`` attribute.
 		"""
 
-		filename = filename or self.original_filename
+		filename = PathPlus(filename or self.original_filename)
 
 		if self.original_filetype == FileType.JDX:
 			# 3rd party
-			from pyms.GCMS.IO.JCAMP import JCAMP_reader  # type: ignore[import]
+			from pyms.GCMS.IO.JCAMP import JCAMP_reader
 			gcms_data = JCAMP_reader(filename)
 
 		elif self.original_filetype == FileType.MZML:
 			# 3rd party
-			from pyms.GCMS.IO.MZML import mzML_reader  # type: ignore[import]
+			from pyms.GCMS.IO.MZML import mzML_reader
 			gcms_data = mzML_reader(filename)
 
 		elif self.original_filetype == FileType.ANDI:
 			# 3rd party
-			from pyms.GCMS.IO.ANDI import ANDI_reader  # type: ignore[import]
+			from pyms.GCMS.IO.ANDI import ANDI_reader
 			gcms_data = ANDI_reader(filename)
 
 		else:
@@ -177,7 +177,7 @@ class Datafile:
 			savitzky_golay: Union[bool, SavitzkyGolayMethod] = True,
 			tophat: bool = True,
 			tophat_structure_size: str = "1.5m",  # Ignored if tophat=False
-			crop_mass_range: Optional[Tuple[int, int]] = None,
+			crop_mass_range: Optional[Tuple[float, float]] = None,
 			) -> IntensityMatrix:
 		"""
 		Build an :class:`~pyms.IntensityMatrix.IntensityMatrix` for the datafile.
@@ -212,9 +212,9 @@ class Datafile:
 								])
 						)
 
-			if min_mass < intensity_matrix.min_mass:
+			if intensity_matrix.min_mass is not None and min_mass < intensity_matrix.min_mass:
 				min_mass = intensity_matrix.min_mass
-			if max_mass > intensity_matrix.max_mass:
+			if intensity_matrix.max_mass is not None and max_mass > intensity_matrix.max_mass:
 				max_mass = intensity_matrix.max_mass
 
 			intensity_matrix.crop_mass(min_mass, max_mass)
@@ -382,12 +382,14 @@ def get_info_from_gcms_data(gcms_data: GCMS_data) -> GCMSDataInfo:
 	n_mz_mean = mean(n_list)
 	n_mz_median = median(n_list)
 
+	min_mass = gcms_data.min_mass or -1
+	max_mass = gcms_data.max_mass or -1
 	info = GCMSDataInfo(
 			rt_range=(gcms_data._min_rt / 60, gcms_data._max_rt / 60),
 			time_step=gcms_data._time_step,
 			time_step_stdev=gcms_data._time_step_std,
 			n_scans=len(scan_list),
-			mz_range=(gcms_data._min_mass, gcms_data._max_mass),
+			mz_range=(min_mass, max_mass),
 			num_mz_mean=n_mz_mean,
 			num_mz_median=n_mz_median,
 			)

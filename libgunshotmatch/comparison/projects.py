@@ -28,8 +28,8 @@ Comparison between projects.
 
 # 3rd party
 import numpy
-import pandas  # type: ignore[import]
-from pyms.DPA.Alignment import Alignment  # type: ignore[import]
+import pandas  # type: ignore[import-untyped]
+from pyms.DPA.Alignment import Alignment
 
 # this package
 from libgunshotmatch.project import Project

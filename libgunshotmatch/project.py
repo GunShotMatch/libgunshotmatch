@@ -32,11 +32,11 @@ from typing import Any, Dict, List, Mapping, Optional, Type
 
 # 3rd party
 import attr
-import pandas  # type: ignore[import]
+import pandas  # type: ignore[import-untyped]
 import pyms_nist_search
 from domdf_python_tools.typing import PathLike
-from pyms.DPA.Alignment import Alignment  # type: ignore[import]
-from pyms.Peak.Class import Peak  # type: ignore[import]
+from pyms.DPA.Alignment import Alignment
+from pyms.Peak.Class import Peak
 
 # this package
 from libgunshotmatch import gzip_util

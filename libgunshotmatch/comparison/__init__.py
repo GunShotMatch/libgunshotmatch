@@ -36,8 +36,8 @@ and unknown samples (from a single datafile).
 from typing import List, Sequence, Tuple
 
 # 3rd party
-from pyms.DPA.Alignment import Alignment  # type: ignore[import]
-from pyms.DPA.PairwiseAlignment import PairwiseAlignment, align_with_tree  # type: ignore[import]
+from pyms.DPA.Alignment import Alignment
+from pyms.DPA.PairwiseAlignment import PairwiseAlignment, align_with_tree
 
 # this package
 from libgunshotmatch.project import Project

@@ -30,7 +30,7 @@ Internal spectrum comparison utilities.
 from typing import List, Optional, Sequence, Tuple
 
 # 3rd party
-from pyms.Spectrum import MassSpectrum  # type: ignore[import]
+from pyms.Spectrum import MassSpectrum
 
 # this package
 from libgunshotmatch.utils import ms_comparison

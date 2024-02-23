@@ -30,9 +30,9 @@ Library search functions.
 from typing import Iterable, List
 
 # 3rd party
-import pandas  # type: ignore[import]
+import pandas  # type: ignore[import-untyped]
 import pyms_nist_search
-from pyms.Peak.Class import Peak  # type: ignore[import]
+from pyms.Peak.Class import Peak
 
 # this package
 from libgunshotmatch.peak import QualifiedPeak

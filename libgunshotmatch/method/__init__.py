@@ -28,9 +28,9 @@ Methods for GunShotMatch analysis.
 
 try:
 	# stdlib
-	import tomllib  # type: ignore[import]
+	import tomllib  # type: ignore[import-not-found]
 except ImportError:
-	import tomli as tomllib  # type: ignore[no-redef]
+	import tomli as tomllib
 
 # stdlib
 import json

@@ -30,7 +30,7 @@ Internal attrs field helpers.
 from typing import Dict, Mapping, Optional, Union
 
 # 3rd party
-import pandas  # type: ignore[import]
+import pandas  # type: ignore[import-untyped]
 from pyms_nist_search import ReferenceData
 
 

@@ -31,15 +31,15 @@ from collections import Counter
 from fnmatch import fnmatch
 from itertools import permutations
 from multiprocessing import Pool
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Tuple, Type, Union, cast
+from typing import Any, Dict, Iterator, List, Mapping, MutableSequence, Optional, Tuple, Type, Union, cast
 
 # 3rd party
 import attr
 import numpy
-import pandas  # type: ignore[import]
+import pandas  # type: ignore[import-untyped]
 import pyms_nist_search
-from pyms.DPA.Alignment import Alignment  # type: ignore[import]
-from pyms.Spectrum import MassSpectrum  # type: ignore[import]
+from pyms.DPA.Alignment import Alignment
+from pyms.Spectrum import MassSpectrum
 from pyms_nist_search import ReferenceData, SearchResult
 
 # this package
@@ -273,7 +273,7 @@ class ConsolidatedPeak:
 			self,
 			rt_list: List[float],
 			area_list: List[float],
-			ms_list: List[MassSpectrum],
+			ms_list: MutableSequence[Optional[MassSpectrum]],
 			*,
 			minutes: bool = False,
 			hits: Optional[List[ConsolidatedSearchResult]] = None,
@@ -570,13 +570,14 @@ def match_counter(
 
 		rt_data = []
 		area_data = []
-		ms_data = []
+		ms_data: MutableSequence[Optional[MassSpectrum]] = []
 		hits = []
 		names = []
 
 		for peak in row:
 			if peak:
 				rt_data.append(peak.rt)
+				assert peak.area is not None
 				area_data.append(peak.area)
 				ms_data.append(peak.mass_spectrum)
 
