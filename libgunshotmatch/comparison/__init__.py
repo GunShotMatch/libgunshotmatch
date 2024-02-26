@@ -33,7 +33,7 @@ and unknown samples (from a single datafile).
 #
 
 # stdlib
-from typing import List, Sequence, Tuple
+from typing import List, Sequence, Tuple, Union
 
 # 3rd party
 from pyms.DPA.Alignment import Alignment
@@ -53,25 +53,45 @@ _projects_mod = projects
 _unknowns_mod = unknowns
 
 
-def align_projects(projects: Sequence[Project] = (), unknowns: Sequence[Project] = ()) -> Alignment:
+def align_projects(
+		projects: Union[Sequence[Project], Project] = (),
+		unknowns: Union[Sequence[Project], Project] = (),
+		D: float = 2.5,
+		gap: float = 0.3,
+		) -> Alignment:
 	"""
 	Align multiple projects and/or unknowns.
 
 	:param projects:
 	:param unknowns:
+	:param D: Retention time tolerance for pairwise alignments (in seconds).
+	:param gap: Gap penalty for pairwise alignments.
+
+	:rtype:
+
+	.. versionchanged:: 0.9.0
+
+		* Added ``D`` and ``gap`` arguments.
+		* ``projects`` and ``unknowns`` can now be a single :class:`~.Project`.
 	"""
+
+	if isinstance(projects, Project):
+		projects = [projects]
+
+	if isinstance(unknowns, Project):
+		unknowns = [unknowns]
 
 	project_alignments = map(_projects_mod.filter_alignment_to_consolidate, projects)
 	unknown_alignments = map(_unknowns_mod.filter_alignment_to_consolidate, unknowns)
 
-	pwa = PairwiseAlignment([*project_alignments, *unknown_alignments], D=2.5, gap=0.3)
+	pwa = PairwiseAlignment([*project_alignments, *unknown_alignments], D=float(D), gap=float(gap))
 	return align_with_tree(pwa)
 
 
 def get_padded_peak_lists(
 		alignment: Alignment,
-		projects: Sequence[Project] = (),
-		unknowns: Sequence[Project] = (),
+		projects: Union[Sequence[Project], Project] = (),
+		unknowns: Union[Sequence[Project], Project] = (),
 		) -> Tuple[List[_PaddedPeakList], List[_PaddedPeakList]]:
 	"""
 	Pad the consolidated peak lists in each project/unknown, from the given between-project alignment.
@@ -79,7 +99,15 @@ def get_padded_peak_lists(
 	:param alignment:
 	:param projects:
 	:param unknowns:
+
+	.. versionchanged:: 0.9.0  ``projects`` and ``unknowns`` can now be a single :class:`~.Project`.
 	"""
+
+	if isinstance(projects, Project):
+		projects = [projects]
+
+	if isinstance(unknowns, Project):
+		unknowns = [unknowns]
 
 	data = alignment.get_peak_alignment(require_all_expr=False, minutes=False)
 
