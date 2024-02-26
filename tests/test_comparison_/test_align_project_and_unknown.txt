@@ -1,0 +1,6 @@
+Loaded
+ Calculating pairwise alignments for 2 alignments (D=2.50, gap=0.30)
+ -> 0 pairs remaining
+ -> Clustering 2 pairwise alignments.Done
+ Aligning 2 items with guide tree (D=2.50, gap=0.30)
+ -> 0 item(s) remaining
