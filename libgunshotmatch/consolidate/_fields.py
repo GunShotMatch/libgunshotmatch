@@ -57,7 +57,18 @@ def _attrs_convert_reference_data(reference_data: Union[Dict, ReferenceData, Non
 		return reference_data
 
 	elif isinstance(reference_data, dict):
-		expected_keys = {"name", "cas", "formula", "contributor", "nist_no", "id", "mw", "mass_spec", "synonyms"}
+		expected_keys = {
+				"name",
+				"cas",
+				"formula",
+				"contributor",
+				"nist_no",
+				"id",
+				"mw",
+				"mass_spec",
+				"synonyms",
+				"exact_mass"
+				}
 		if set(reference_data.keys()) != expected_keys:
 			# print(set(reference_data.keys()))
 			raise TypeError(_reference_data_error_msg)

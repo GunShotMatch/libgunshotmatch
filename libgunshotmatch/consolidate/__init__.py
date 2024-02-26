@@ -205,10 +205,6 @@ class ConsolidatedSearchResult:
 		:param d:
 		"""
 
-		if d["reference_data"] is None:
-			reference_data = None
-		else:
-			reference_data = ReferenceData.from_dict(d["reference_data"])
 
 		return cls(
 				name=d["name"],
@@ -216,7 +212,7 @@ class ConsolidatedSearchResult:
 				mf_list=d["mf_list"],
 				rmf_list=d["rmf_list"],
 				hit_numbers=d["hit_numbers"],
-				reference_data=reference_data,
+				reference_data=d["reference_data"],
 				)
 
 

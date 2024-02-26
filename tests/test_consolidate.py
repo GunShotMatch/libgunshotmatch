@@ -14,6 +14,7 @@ from pytest_regressions.dataframe_regression import DataFrameRegressionFixture
 
 # this package
 from libgunshotmatch.consolidate import ConsolidatedPeakFilter, pairwise_ms_comparisons
+from libgunshotmatch.consolidate._fields import _attrs_convert_reference_data
 from libgunshotmatch.project import Project
 
 # Test consolidate process from gsmp file
@@ -127,3 +128,36 @@ def test_pairwise_ms_comparison(dataframe_regression: DataFrameRegressionFixture
 
 
 # TODO: creation etc.
+
+
+def test__attrs_convert_reference_data():
+	project = Project.from_file("tests/Eley Hymax.gsmp")
+	assert project.consolidated_peaks is not None
+
+	peaks = sorted(project.consolidated_peaks, key=attrgetter("area"), reverse=True)
+	largest_peak = peaks[0]
+	reference_data = largest_peak.hits[0].reference_data
+	assert reference_data is not None
+	via_converter = _attrs_convert_reference_data(reference_data.to_dict())
+	assert via_converter is not None
+
+	assert reference_data.name == via_converter.name
+	assert reference_data.cas == via_converter.cas
+	assert reference_data.formula == via_converter.formula
+	assert reference_data.contributor == via_converter.contributor
+	assert reference_data.nist_no == via_converter.nist_no
+	assert reference_data.id == via_converter.id
+	assert reference_data.mw == via_converter.mw
+	assert reference_data.exact_mass == via_converter.exact_mass
+	assert reference_data.synonyms == via_converter.synonyms
+	assert reference_data.mass_spec == via_converter.mass_spec
+
+	assert _attrs_convert_reference_data(reference_data) is reference_data
+
+	with pytest.raises(TypeError, match="'reference_data' must be a `pyms_nist_search.ReferenceData` object,"):
+		# Wrong keys
+		_attrs_convert_reference_data({})
+
+	with pytest.raises(TypeError, match="'reference_data' must be a `pyms_nist_search.ReferenceData` object,"):
+		# Wrong type
+		_attrs_convert_reference_data([])  # type: ignore[arg-type]
