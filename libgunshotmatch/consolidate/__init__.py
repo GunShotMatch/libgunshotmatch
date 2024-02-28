@@ -205,7 +205,6 @@ class ConsolidatedSearchResult:
 		:param d:
 		"""
 
-
 		return cls(
 				name=d["name"],
 				cas=d["cas"],
