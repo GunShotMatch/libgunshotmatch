@@ -254,7 +254,7 @@ class ConsolidatedPeak:
 	area_list: List[float] = attr.field(converter=list)
 
 	#: List of mass spectra for the aligned peaks.
-	ms_list: List[MassSpectrum] = attr.field(converter=list)
+	ms_list: MutableSequence[Optional[MassSpectrum]] = attr.field(converter=list)
 
 	#: Optional list of possible identities for this peak.
 	hits: List[ConsolidatedSearchResult] = attr.field(converter=_attrs_convert_hits)
