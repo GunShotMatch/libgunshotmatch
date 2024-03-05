@@ -32,6 +32,7 @@ from typing import TYPE_CHECKING, Any, Iterable, List, Optional, Sequence, Tuple
 
 # 3rd party
 import numpy
+from attr import AttrsInstance
 from chemistry_tools.spectrum_similarity import SpectrumSimilarity
 from mathematical.utils import rounders
 from pyms.DPA.Alignment import Alignment
@@ -114,10 +115,10 @@ def ms_comparison(top_ms: MassSpectrum, bottom_ms: MassSpectrum) -> Optional[flo
 	return match * 1000
 
 
-_O = TypeVar("_O", bound=object)
+_AI = TypeVar("_AI", bound=AttrsInstance)
 
 
-def _fix_init_annotations(method: Type[_O]) -> Type[_O]:
+def _fix_init_annotations(method: Type[_AI]) -> Type[_AI]:
 	init_annotations = method.__init__.__annotations__
 	cls_annotations = method.__annotations__
 
