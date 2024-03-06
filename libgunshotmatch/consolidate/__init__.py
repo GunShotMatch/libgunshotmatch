@@ -206,12 +206,16 @@ class ConsolidatedSearchResult:
 		:param d:
 		"""
 
+		hit_numbers = [float("nan") if hn == -65535 else hn for hn in d["hit_numbers"]]
+		mf_list = [float("nan") if mf == -65535 else mf for mf in d["mf_list"]]
+		rmf_list = [float("nan") if mf == -65535 else mf for mf in d["rmf_list"]]
+
 		return cls(
 				name=d["name"],
 				cas=d["cas"],
-				mf_list=d["mf_list"],
-				rmf_list=d["rmf_list"],
-				hit_numbers=d["hit_numbers"],
+				mf_list=mf_list,
+				rmf_list=rmf_list,
+				hit_numbers=hit_numbers,
 				reference_data=d["reference_data"],
 				)
 
