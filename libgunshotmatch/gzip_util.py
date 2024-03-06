@@ -53,7 +53,7 @@ def read_gzip_json(path: PathLike) -> JSONOutput:
 	with gzip.open(PathPlus(path), 'r') as f:
 		try:
 			# 3rd party
-			import orjson  # type: ignore[import-not-found]
+			import orjson
 			data = f.read().decode().replace("NaN", "-65535")
 			return orjson.loads(data)
 		except ImportError:
