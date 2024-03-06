@@ -59,7 +59,8 @@ __all__ = (
 		"ConsolidatedSearchResult",
 		"match_counter",
 		"pairwise_ms_comparisons",
-		"ConsolidatedPeakFilter"
+		"ConsolidatedPeakFilter",
+		"InvertedFilter",
 		)
 
 
@@ -768,3 +769,34 @@ class ConsolidatedPeakFilter:
 		"""
 
 		return [cp for cp in consolidated_peaks if not self.should_filter_peak(cp)]
+
+
+@_fix_init_annotations
+@attr.define
+class InvertedFilter(ConsolidatedPeakFilter):
+	"""
+	Inverted version of :class:`~.ConsolidatedPeakFilter`.
+
+	Returns peaks which would be excluded by a :class:`~.ConsolidatedPeakFilter`.
+
+	.. versionadded:: 0.10.0
+	"""
+
+	def print_skip_reason(self, peak: ConsolidatedPeak, reason: str) -> None:  # noqa: D102
+		if self.verbose:
+			print(f"Would reject peak at {peak.rt / 60:0.3f} mins:", reason)
+
+	def filter(self, consolidated_peaks: List[ConsolidatedPeak]) -> List[ConsolidatedPeak]:  # noqa: A003  # pylint: disable=redefined-builtin
+		"""
+		Filter a list of consolidated peaks.
+
+		:param consolidated_peaks:
+		"""
+
+		filtered_consolidated_peaks = []
+
+		for cp in consolidated_peaks:
+			if self.should_filter_peak(cp):
+				filtered_consolidated_peaks.append(cp)
+
+		return filtered_consolidated_peaks

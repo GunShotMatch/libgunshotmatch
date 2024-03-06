@@ -6,14 +6,14 @@ from typing import Optional
 import numpy
 import pyms_nist_search
 import pytest
-from coincidence.regressions import AdvancedDataRegressionFixture, _representer_for
+from coincidence.regressions import AdvancedDataRegressionFixture, AdvancedFileRegressionFixture, _representer_for
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
 from pytest_regressions.data_regression import RegressionYamlDumper
 from pytest_regressions.dataframe_regression import DataFrameRegressionFixture
 
 # this package
-from libgunshotmatch.consolidate import ConsolidatedPeakFilter, pairwise_ms_comparisons
+from libgunshotmatch.consolidate import ConsolidatedPeakFilter, InvertedFilter, pairwise_ms_comparisons
 from libgunshotmatch.consolidate._fields import _attrs_convert_reference_data
 from libgunshotmatch.project import Project
 
@@ -49,7 +49,9 @@ class MockEngine(pyms_nist_search.Engine):
 
 def test_consolidate(
 		advanced_data_regression: AdvancedDataRegressionFixture,
+		advanced_file_regression: AdvancedFileRegressionFixture,
 		dataframe_regression: DataFrameRegressionFixture,
+		capsys,
 		):
 	project_file = PathPlus(__file__).parent / "ELEY .22LR.gsmp"
 	project = Project.from_file(project_file)
@@ -63,6 +65,40 @@ def test_consolidate(
 			)
 
 	ms_comparison_df = project.consolidate(MockEngine(''), cp_filter).astype(int)
+
+	advanced_file_regression.check(capsys.readouterr().out)
+
+	assert project.consolidated_peaks is not None
+
+	consolidated_peaks = []
+	for cp in project.consolidated_peaks:
+		cp_as_dict = cp.to_dict()
+		cp_as_dict["ms_comparison"] = cp.ms_comparison.astype(int).to_dict()
+		consolidated_peaks.append(cp_as_dict)
+	advanced_data_regression.check(consolidated_peaks)
+	dataframe_regression.check(ms_comparison_df, basename="test_consolidate_ms_comparison_df")
+
+
+def test_inverted_consolidate(
+		advanced_data_regression: AdvancedDataRegressionFixture,
+		advanced_file_regression: AdvancedFileRegressionFixture,
+		dataframe_regression: DataFrameRegressionFixture,
+		capsys,
+		):
+	project_file = PathPlus(__file__).parent / "ELEY .22LR.gsmp"
+	project = Project.from_file(project_file)
+	# advanced_data_regression.check(sdjson.dumps(project.to_dict(), indent=2))
+
+	cp_filter = InvertedFilter(
+			name_filter=["*silane*", "*silyl*", "*siloxy*"],
+			min_match_factor=600,
+			min_appearances=5,
+			verbose=True,
+			)
+
+	ms_comparison_df = project.consolidate(MockEngine(''), cp_filter).astype(int)
+
+	advanced_file_regression.check(capsys.readouterr().out)
 
 	assert project.consolidated_peaks is not None
 

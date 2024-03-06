@@ -20,6 +20,14 @@
 
 .. latex:clearpage::
 
+.. autoattrs:: libgunshotmatch.consolidate.InvertedFilter
+	:exclude-members: __repr__,__getstate__,__setstate__,__setattr__,__ne__,__delattr__,__attrs_init__,__eq__,__str__
+	:no-inherited-members:
+
+	.. autosummary-widths:: 45/100
+
+.. latex:clearpage::
+
 .. autoattrs:: libgunshotmatch.consolidate.ConsolidatedSearchResult
 	:exclude-members: __repr__,__getstate__,__setstate__,__setattr__,__ne__,__delattr__,__attrs_init__,__eq__,__str__
 	:no-show-inheritance:
