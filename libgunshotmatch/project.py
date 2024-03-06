@@ -50,7 +50,7 @@ from libgunshotmatch.datafile import Repeat
 from libgunshotmatch.peak import PeakList, QualifiedPeak, peak_from_dict
 from libgunshotmatch.utils import create_alignment
 
-__all__ = ["Project"]
+__all__ = ("Project", "consolidate")
 
 
 @attr.define
@@ -176,31 +176,7 @@ class Project:
 			between the repeats for each aligned peak.
 		"""
 
-		ms_comparison_df = pairwise_ms_comparisons(self.alignment)
-
-		peak_numbers: List[int] = []
-		peak: Optional[QualifiedPeak]
-
-		qualified_peak_array = []
-
-		# for experiment in project.alignment.expr_code:
-		for experiment in self.datafile_data:
-			qualified_peaks = self.datafile_data[experiment].qualified_peaks
-			assert qualified_peaks is not None
-			for peak in qualified_peaks:
-				assert peak.peak_number is not None
-				peak_numbers.append(peak.peak_number)
-			qualified_peak_array.append(qualified_peaks)
-
-		# Convert peak_numbers to a set and sort smallest to largest
-		peak_numbers = sorted(set(peak_numbers))
-
-		consolidated_peaks = match_counter(
-				engine=engine,
-				peak_numbers=peak_numbers,
-				qualified_peaks=qualified_peak_array,
-				ms_comp_data=ms_comparison_df,
-				)
+		consolidated_peaks, ms_comparison_df = consolidate(self, engine)
 
 		if peak_filter is None:
 			self.consolidated_peaks = consolidated_peaks
@@ -210,3 +186,48 @@ class Project:
 		return ms_comparison_df
 
 		# chart_data = make_chart_data(self)
+
+
+def consolidate(
+		project: Project,
+		engine: pyms_nist_search.Engine,
+		) -> pandas.DataFrame:
+	"""
+	Consolidate the compound identification from the experiments into a single dataset.
+
+	:param project:
+	:param engine:
+
+	:returns: List of consolidated peaks and :class:`pandas.DataFrame`
+		giving the results of pairwise mass spectral comparisons between the repeats for each aligned peak.
+
+	.. versionadded:: 0.10.0
+	"""
+
+	ms_comparison_df = pairwise_ms_comparisons(project.alignment)
+
+	peak_numbers: List[int] = []
+	peak: Optional[QualifiedPeak]
+
+	qualified_peak_array = []
+
+	# for experiment in project.alignment.expr_code:
+	for experiment in project.datafile_data:
+		qualified_peaks = project.datafile_data[experiment].qualified_peaks
+		assert qualified_peaks is not None
+		for peak in qualified_peaks:
+			assert peak.peak_number is not None
+			peak_numbers.append(peak.peak_number)
+		qualified_peak_array.append(qualified_peaks)
+
+	# Convert peak_numbers to a set and sort smallest to largest
+	peak_numbers = sorted(set(peak_numbers))
+
+	consolidated_peaks = match_counter(
+			engine=engine,
+			peak_numbers=peak_numbers,
+			qualified_peaks=qualified_peak_array,
+			ms_comp_data=ms_comparison_df,
+			)
+
+	return consolidated_peaks, ms_comparison_df
