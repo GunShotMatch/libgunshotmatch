@@ -42,6 +42,7 @@ known_third_party = [
     "importlib_metadata",
     "mathematical",
     "numpy",
+    "orjson",
     "pandas",
     "pymassspec",
     "pyms_nist_search",
