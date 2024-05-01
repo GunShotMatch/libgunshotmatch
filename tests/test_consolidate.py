@@ -3,30 +3,24 @@ from operator import attrgetter
 from typing import Optional
 
 # 3rd party
-import numpy
 import pyms_nist_search
 import pytest
-from coincidence.regressions import AdvancedDataRegressionFixture, AdvancedFileRegressionFixture, _representer_for
+from coincidence.regressions import AdvancedDataRegressionFixture, AdvancedFileRegressionFixture
 from domdf_python_tools.paths import PathPlus
 from domdf_python_tools.typing import PathLike
-from pytest_regressions.data_regression import RegressionYamlDumper
 from pytest_regressions.dataframe_regression import DataFrameRegressionFixture
 
 # this package
-from libgunshotmatch.consolidate import ConsolidatedPeakFilter, InvertedFilter, pairwise_ms_comparisons
+from libgunshotmatch.consolidate import (
+		ConsolidatedPeakFilter,
+		InvertedFilter,
+		combine_spectra,
+		pairwise_ms_comparisons
+		)
 from libgunshotmatch.consolidate._fields import _attrs_convert_reference_data
 from libgunshotmatch.project import Project
 
 # Test consolidate process from gsmp file
-
-
-@_representer_for(
-		numpy.int64,
-		numpy.int32,
-		numpy.float64,
-		)
-def _represent_numpy(dumper: RegressionYamlDumper, data: int):  # noqa: MAN002
-	return dumper.represent_data(int(data))
 
 
 class MockEngine(pyms_nist_search.Engine):
@@ -197,3 +191,13 @@ def test__attrs_convert_reference_data():
 	with pytest.raises(TypeError, match="'reference_data' must be a `pyms_nist_search.ReferenceData` object,"):
 		# Wrong type
 		_attrs_convert_reference_data([])  # type: ignore[arg-type]
+
+
+def test_combine_spectra(advanced_data_regression: AdvancedDataRegressionFixture):
+	project = Project.from_file("tests/Eley Super Game.gsmp")
+	assert project.consolidated_peaks is not None
+
+	spectra = []
+	for peak in project.consolidated_peaks:
+		spectra.append(combine_spectra(peak))
+	advanced_data_regression.check(spectra)

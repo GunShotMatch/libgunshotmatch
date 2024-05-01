@@ -27,7 +27,7 @@ Functions for combining peak identifications across aligned peaks into a single 
 #
 
 # stdlib
-from collections import Counter
+from collections import Counter, defaultdict
 from fnmatch import fnmatch
 from itertools import permutations
 from multiprocessing import Pool
@@ -61,6 +61,7 @@ __all__ = (
 		"pairwise_ms_comparisons",
 		"ConsolidatedPeakFilter",
 		"InvertedFilter",
+		"combine_spectra",
 		)
 
 
@@ -804,3 +805,31 @@ class InvertedFilter(ConsolidatedPeakFilter):
 				filtered_consolidated_peaks.append(cp)
 
 		return filtered_consolidated_peaks
+
+
+def combine_spectra(peak: ConsolidatedPeak) -> Tuple[List[int], List[float]]:
+	"""
+	Sum the intensities across all mass spectra in the given peak.
+
+	:param peak:
+
+	:returns: List of masses and list of corresponding intensities.
+
+	.. versionadded:: v0.11.0
+	"""
+
+	combined_ms_data: Dict[int, float] = defaultdict(float)
+
+	for ms in peak.ms_list:
+		if ms is not None:
+			for mass, intensity in zip(ms.mass_list, ms.intensity_list):
+				combined_ms_data[mass] += intensity
+
+	mass_list, intensity_list = [], []
+	for mass, intensity in combined_ms_data.items():
+		mass_list.append(mass)
+		intensity_list.append(intensity)
+
+	# mass_list, intensity_list = zip(*combined_ms_data.items())
+
+	return mass_list, intensity_list

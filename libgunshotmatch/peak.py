@@ -55,6 +55,7 @@ __all__ = (
 		"filter_peaks",
 		"peak_from_dict",
 		"write_alignment",
+		"base_peak_mass",
 		)
 
 
@@ -531,3 +532,25 @@ def _to_peak_list(a_list: List[Peak]) -> PeakList:
 		return a_list
 	else:
 		return PeakList(a_list)
+
+
+def base_peak_mass(peak: Peak) -> float:
+	"""
+	Returns the mass of the largest fragment in the peak's mass spectrum.
+
+	:param peak:
+
+	.. versionadded:: v0.11.0
+	"""
+
+	apex_mass_list = peak.mass_spectrum.mass_list
+	apex_mass_spec = peak.mass_spectrum.mass_spec
+
+	# Determine the intensity of the base peak in the mass spectrum
+	base_peak_intensity = max(apex_mass_spec)
+
+	# Determine the index of the base peak in the mass spectrum
+	base_peak_index = apex_mass_spec.index(base_peak_intensity)
+
+	# Finally, determine the mass of the base peak
+	return apex_mass_list[base_peak_index]
