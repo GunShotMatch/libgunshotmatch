@@ -171,7 +171,11 @@ def get_rt_range(project: "Project") -> Tuple[float, float]:
 	return min_rt, max_rt
 
 
-def create_alignment(peakpos: Sequence[Sequence[Peak]], expr_code: List[str], similarity: float = 0) -> Alignment:
+def create_alignment(
+		peakpos: Sequence[Sequence[Optional[Peak]]],
+		expr_code: List[str],
+		similarity: float = 0,
+		) -> Alignment:
 	"""
 	Create a new :class:`pyms.DPA.Alignment.Alignment` object.
 
@@ -185,7 +189,7 @@ def create_alignment(peakpos: Sequence[Sequence[Peak]], expr_code: List[str], si
 	"""
 
 	alignment = Alignment(None)
-	alignment.peakpos = [list(p) for p in peakpos]
+	alignment.peakpos = [list(p) for p in peakpos]  # type: ignore[arg-type]
 	alignment.peakalgt = numpy.transpose(alignment.peakpos).tolist()  # type: ignore[arg-type]
 	alignment.expr_code = expr_code
 	alignment.similarity = similarity

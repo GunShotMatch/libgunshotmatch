@@ -241,6 +241,10 @@ class PeakList(List[Peak]):
 
 		peaks_as_pure_list: List[Dict[str, Any]] = []
 		for peak in self:
+			if peak is None:
+				peaks_as_pure_list.append(None)
+				continue
+
 			try:
 				ion_areas = peak.ion_areas
 			except ValueError:

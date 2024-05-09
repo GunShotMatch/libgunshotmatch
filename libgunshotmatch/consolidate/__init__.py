@@ -477,10 +477,17 @@ class ConsolidatedPeak:
 		for hit in d["hits"]:
 			hits.append(ConsolidatedSearchResult.from_dict(hit))
 
+		ms_list: MutableSequence[Optional[MassSpectrum]] = []
+		for msd in d["ms_list"]:
+			if msd is None:
+				ms_list.append(None)
+			else:
+				ms_list.append(MassSpectrum.from_dict(msd))
+
 		return cls(
 				rt_list=d["rt_list"],
 				area_list=d["area_list"],
-				ms_list=[MassSpectrum.from_dict(msd) for msd in d["ms_list"]],
+				ms_list=ms_list,
 				meta=d["meta"],
 				ms_comparison=d["ms_comparison"],
 				hits=hits,

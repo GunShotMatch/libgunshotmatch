@@ -28,7 +28,7 @@ Represents a collection of repeat analyses.
 
 # stdlib
 import os
-from typing import Any, Dict, List, Mapping, Optional, Type
+from typing import Any, Dict, List, Mapping, MutableSequence, Optional, Type
 
 # 3rd party
 import attr
@@ -131,14 +131,15 @@ class Project:
 		"""
 
 		alignment_as_dict = d["alignment"]
-		alignment_peaks: List[List[Peak]] = []
+		alignment_peaks: List[MutableSequence[Optional[Peak]]] = []
 		for row in alignment_as_dict["peaks"]:
 			alignment_peaks.append([])
 			for peak in row:
 				# print(peak)
-				peak_obj = peak_from_dict(peak)
-
-				alignment_peaks[-1].append(peak_obj)
+				if peak is None:
+					alignment_peaks[-1].append(None)
+				else:
+					alignment_peaks[-1].append(peak_from_dict(peak))
 
 		alignment = create_alignment(
 				alignment_peaks,
