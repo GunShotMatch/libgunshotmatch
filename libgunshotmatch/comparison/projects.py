@@ -57,11 +57,13 @@ def filter_alignment_to_consolidate(project: Project) -> Alignment:
 	peakpos = [project.alignment.peakpos[idx] for idx in sort_map]
 	assert desired_order == expr_code
 
-	consolidated_peak_retention_times = [cp.rt_list for cp in project.consolidated_peaks]
+	consolidated_peak_retention_times = []
+	for cp in project.consolidated_peaks:
+		consolidated_peak_retention_times.append([None if numpy.isnan(rt) else rt for rt in cp.rt_list])
 
 	aligned_peaks_surviving_consolidate = []
 	for aligned_peaks in zip(*peakpos):
-		aprt = [p.rt for p in reversed(aligned_peaks)]
+		aprt = [None if p is None else p.rt for p in reversed(aligned_peaks)]
 		if aprt in consolidated_peak_retention_times:
 			aligned_peaks_surviving_consolidate.append(aligned_peaks)
 
