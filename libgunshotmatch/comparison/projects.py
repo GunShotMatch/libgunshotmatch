@@ -52,9 +52,10 @@ def filter_alignment_to_consolidate(project: Project) -> Alignment:
 
 	# Sort expr_code and peakpos into order from datafile_data
 	desired_order = list(project.datafile_data)[::-1]
-	sort_map = [desired_order.index(code) for code in project.alignment.expr_code]
+	sort_map = [project.alignment.expr_code.index(code) for code in desired_order]
 	expr_code = [project.alignment.expr_code[idx] for idx in sort_map]
 	peakpos = [project.alignment.peakpos[idx] for idx in sort_map]
+	assert desired_order == expr_code
 
 	consolidated_peak_retention_times = [cp.rt_list for cp in project.consolidated_peaks]
 
