@@ -484,9 +484,12 @@ class ConsolidatedPeak:
 			else:
 				ms_list.append(MassSpectrum.from_dict(msd))
 
+		rt_list = [float("nan") if hn == -65535 else hn for hn in d["rt_list"]]
+		area_list = [float("nan") if hn == -65535 else hn for hn in d["area_list"]]
+
 		return cls(
-				rt_list=d["rt_list"],
-				area_list=d["area_list"],
+				rt_list=rt_list,
+				area_list=area_list,
 				ms_list=ms_list,
 				meta=d["meta"],
 				ms_comparison=d["ms_comparison"],
