@@ -27,13 +27,14 @@ Classes representing peaks, and functions for peak filtering.
 #
 
 # stdlib
-from typing import Any, Collection, Dict, List, Mapping, Optional, Sequence, Type, Union
+from typing import TYPE_CHECKING, Any, Collection, Dict, List, Mapping, Optional, Sequence, Type, Union
 
 # 3rd party
 import numpy
 import pandas  # type: ignore[import-untyped]
 import sdjson
 from domdf_python_tools.paths import PathPlus
+from domdf_python_tools.stringlist import StringList
 from domdf_python_tools.typing import PathLike
 from pyms.BillerBiemann import num_ions_threshold
 from pyms.DPA.Alignment import exprl2alignment
@@ -42,9 +43,14 @@ from pyms.Experiment import Experiment
 from pyms.IonChromatogram import IonChromatogram
 from pyms.Noise.Analysis import window_analyzer
 from pyms.Peak.Class import AbstractPeak, ICPeak, Peak
+from pyms.Peak.List import composite_peak
 from pyms.Peak.List.Function import sele_peaks_by_rt
 from pyms.Spectrum import MassSpectrum
 from pyms_nist_search import SearchResult
+
+if TYPE_CHECKING:
+	# this package
+	from libgunshotmatch.project import Project
 
 __all__ = (
 		"PeakList",
@@ -55,6 +61,7 @@ __all__ = (
 		"filter_peaks",
 		"peak_from_dict",
 		"write_alignment",
+		"write_project_alignment",
 		"base_peak_mass",
 		)
 
@@ -401,6 +408,106 @@ def align_peaks(
 	return A1
 
 
+def _format_rt(rt: Optional[float]) -> str:
+	return "NA" if rt is None or numpy.isnan(rt) else f"{rt:.3f}"
+
+
+def _format_area(area: Optional[float]) -> str:
+	return "NA" if area is None else f"{area:.0f}"
+
+
+def _alignment_write_csv(
+		project: "Project",
+		output_dir_p: PathPlus,
+		) -> None:
+
+	# Sort expr_code and peakpos into order from datafile_data
+	desired_order = list(project.datafile_data)
+	sort_map = [project.alignment.expr_code.index(code) for code in desired_order]
+	expr_code = [project.alignment.expr_code[idx] for idx in sort_map]
+	peakpos = [project.alignment.peakpos[idx] for idx in sort_map]
+	assert desired_order == expr_code
+
+	# write headers
+	header = ["UID", "RTavg", *(f'"{item}"' for item in project.datafile_data)]
+
+	rt_stringlist = StringList([','.join(header)])
+	area_stringlist = StringList([','.join(header)])
+
+	# for each alignment position write alignment's peak and area
+	for peak_idx in range(len(peakpos[0])):  # loop through peak lists (rows)
+		rts, areas, new_peak_list = [], [], []
+
+		for row in peakpos:
+			peak = row[peak_idx]
+
+			if peak is None:
+				rts.append(None)
+				areas.append(None)
+			else:
+				rts.append(peak.rt / 60)
+				areas.append(peak.area)
+				new_peak_list.append(peak)
+
+		compo_peak = composite_peak(new_peak_list)
+
+		if compo_peak is None:
+			continue
+
+		uid, mean_rt = compo_peak.UID, f"{float(compo_peak.rt / 60):.3f}"
+		rt_stringlist.append(','.join([uid, mean_rt, *map(_format_rt, rts)]))
+		area_stringlist.append(','.join([uid, mean_rt, *map(_format_area, areas)]))
+
+	(output_dir_p / f"{project.name}_alignment_rt.csv").write_lines(rt_stringlist)
+	(output_dir_p / f"{project.name}_alignment_area.csv").write_lines(area_stringlist)
+
+
+def write_project_alignment(
+		project: "Project",
+		output_dir: PathLike,
+		require_all_datafiles: bool = False,
+		) -> None:
+	"""
+	Write the alignment data (retention times, peak areas, mass spectra) to disk.
+
+	The output files are as follows:
+
+	* :file:`{{project.name}}_alignment_rt.csv`, containing the aligned retention times.
+	* :file:`{{project.name}}_alignment_area.csv`, containing the peak areas for the corresponding aligned retention times.
+	* :file:`{{project.name}}_alignment_rt.json`, containing the aligned retention times.
+	* :file:`{{project.name}}_alignment_area.json`, containing the peak areas for the corresponding aligned retention times.
+	* :file:`{{project.name}}_alignment_ms.json`, containing the mass spectra for the corresponding aligned retention times.
+
+	:param project:
+	:param output_dir: Directory to store the output files in.
+	:param require_all_datafiles: Whether the peak must be present in all experiments to be included in the data frame.
+
+	:rtype:
+
+	.. versionadded:: 0.12.0  Added as an alternative to :func:`~.write_alignment`. This function sorts the columns to match the order of ``project.datafile_data``.
+	"""
+
+	output_dir_p = PathPlus(output_dir)
+
+	_alignment_write_csv(project, output_dir_p)
+
+	rt_alignment = project.alignment.get_peak_alignment(require_all_expr=require_all_datafiles)
+	rt_alignment_filename = output_dir_p / f"{project.name}_alignment_rt.json"
+	rt_alignment_filename.write_clean(rt_alignment.to_json(indent=2))
+
+	area_alignment = project.alignment.get_area_alignment(require_all_expr=require_all_datafiles)
+	area_alignment_filename = output_dir_p / f"{project.name}_alignment_area.json"
+	area_alignment_filename.write_clean(area_alignment.to_json(indent=2))
+
+	ms_alignment = project.alignment.get_ms_alignment(require_all_expr=require_all_datafiles)
+	# ms_alignment.to_json(output_dir_p / 'alignment_ms.json')
+	alignment_ms_filename = (output_dir_p / f"{project.name}_alignment_ms.json")
+	alignment_ms_filename.dump_json(
+			ms_alignment.to_dict(),
+			json_library=sdjson,  # type: ignore[arg-type]
+			)
+
+
 def write_alignment(
 		alignment: Alignment,
 		project_name: str,
@@ -434,11 +541,11 @@ def write_alignment(
 
 	rt_alignment = alignment.get_peak_alignment(require_all_expr=require_all_datafiles)
 	rt_alignment_filename = output_dir_p / f"{project_name}_alignment_rt.json"
-	rt_alignment_filename.write_clean(rt_alignment.to_json())
+	rt_alignment_filename.write_clean(rt_alignment.to_json(indent=2))
 
 	area_alignment = alignment.get_area_alignment(require_all_expr=require_all_datafiles)
 	area_alignment_filename = output_dir_p / f"{project_name}_alignment_area.json"
-	area_alignment_filename.write_clean(area_alignment.to_json())
+	area_alignment_filename.write_clean(area_alignment.to_json(indent=2))
 
 	ms_alignment = alignment.get_ms_alignment(require_all_expr=require_all_datafiles)
 	# ms_alignment.to_json(output_dir_p / 'alignment_ms.json')
