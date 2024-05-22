@@ -35,6 +35,7 @@
 	.. autosummary-widths:: 1/2
 
 
-.. autofunction:: libgunshotmatch.consolidate.match_counter
+.. autofunction:: libgunshotmatch.consolidate.combine_spectra
 .. latex:clearpage::
+.. autofunction:: libgunshotmatch.consolidate.match_counter
 .. autofunction:: libgunshotmatch.consolidate.pairwise_ms_comparisons
