@@ -60,16 +60,21 @@ def read_gzip_json(path: PathLike) -> JSONOutput:
 			return sdjson.load(f)
 
 
-def write_gzip_json(path: PathLike, data: JSONInput, indent: Optional[int] = 2) -> None:
+def write_gzip_json(path: PathLike, data: JSONInput, indent: Optional[int] = 2, mtime: int = 0) -> None:
 	"""
 	Write JSON to a gzip file.
 
 	:param path: The filename to write to.
 	:param data: The JSON-serializable data to output.
 	:param indent: Number of spaces used to indent JSON.
+	:param mtime: Modification time for gzip header
+
+	:rtype:
+
+	.. versionchanged:: 0.12.0  Added ``mtime`` argument.
 	"""
 
 	json_data = sdjson.dumps(data, indent=indent)
 
-	with gzip.open(PathPlus(path), 'w') as f:
+	with gzip.GzipFile(PathPlus(path), 'w', mtime=mtime) as f:
 		f.write(json_data.encode("utf-8"))
