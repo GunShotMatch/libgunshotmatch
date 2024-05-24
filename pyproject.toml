@@ -4,7 +4,7 @@ build-backend = "whey"
 
 [project]
 name = "libgunshotmatch"
-version = "0.11.2"
+version = "0.12.0"
 description = "Base library for GunShotMatch."
 readme = "README.rst"
 keywords = []
