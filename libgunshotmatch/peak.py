@@ -505,6 +505,7 @@ def write_project_alignment(
 	alignment_ms_filename.dump_json(
 			ms_alignment.to_dict(),
 			json_library=sdjson,  # type: ignore[arg-type]
+			indent=2,
 			)
 
 
