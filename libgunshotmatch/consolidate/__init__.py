@@ -41,6 +41,7 @@ import pyms_nist_search
 from pyms.DPA.Alignment import Alignment
 from pyms.Spectrum import MassSpectrum
 from pyms_nist_search import ReferenceData, SearchResult
+from typing_extensions import Self
 
 # this package
 from libgunshotmatch.consolidate._fields import (
@@ -715,7 +716,7 @@ class ConsolidatedPeakFilter:
 	verbose: bool = False
 
 	@classmethod
-	def from_method(cls: Type["ConsolidatedPeakFilter"], method: ConsolidateMethod) -> "ConsolidatedPeakFilter":
+	def from_method(cls: Type[Self], method: ConsolidateMethod) -> Self:
 		"""
 		Construct a :class:`~.ConsolidatedPeakFilter` from a :class:`~.ConsolidateMethod`.
 
