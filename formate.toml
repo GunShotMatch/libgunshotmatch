@@ -51,6 +51,7 @@ known_third_party = [
     "sdjson",
     "tomli",
     "tomli_w",
+    "typing_extensions",
 ]
 known_first_party = [ "libgunshotmatch",]
 
