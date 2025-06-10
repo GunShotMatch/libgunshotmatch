@@ -157,6 +157,8 @@ class QualifiedPeak(Peak):
 		else:
 			new_peak = cls(peak.rt, peak.mass_spectrum, False, peak.is_outlier)
 
+		assert peak.area is not None
+		assert peak.bounds is not None
 		new_peak.area = peak.area
 		new_peak.bounds = peak.bounds
 		new_peak._UID = peak.UID
