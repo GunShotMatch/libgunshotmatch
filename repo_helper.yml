@@ -12,8 +12,6 @@ short_desc: 'Base library for GunShotMatch.'
 
 enable_devmode: false
 enable_conda: false
-mypy_version: 1.16
-python_deploy_version: 3.9
 use_whey: true
 
 python_versions:
