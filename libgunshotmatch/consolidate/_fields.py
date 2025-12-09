@@ -42,7 +42,7 @@ def _attrs_convert_cas(cas: str) -> str:
 
 
 _reference_data_error_msg = ''.join([
-		"'reference_data' must be a `pyms_nist_search.ReferenceData` object,",
+		"'reference_data' must be a `pyms_nist_search.ReferenceData` object, ",
 		"a dictionary representing a `ReferenceData` object,",
 		"or `None`",
 		])
@@ -67,10 +67,12 @@ def _attrs_convert_reference_data(reference_data: Union[Dict, ReferenceData, Non
 				"mw",
 				"mass_spec",
 				"synonyms",
-				"exact_mass"
+				"exact_mass",
+				"lib_idx",
 				}
-		if set(reference_data.keys()) != expected_keys:
-			# print(set(reference_data.keys()))
+		extra_keys = set(reference_data.keys()) - expected_keys
+		if extra_keys:
+			# print(extra_keys)
 			raise TypeError(_reference_data_error_msg)
 		else:
 			return ReferenceData(**reference_data)
