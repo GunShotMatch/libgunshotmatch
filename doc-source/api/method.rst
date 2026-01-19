@@ -8,12 +8,6 @@
 	:member-order: bysource
 	:exclude-members: __repr__,__getstate__,__setstate__,__setattr__,__ne__,__delattr__
 
-.. autoclass:: libgunshotmatch.method.MethodBase
-	:exclude-members: __repr__,__getstate__,__setstate__,__setattr__,__ne__,__delattr__,__attrs_init__,__eq__,__str__
-	:no-show-inheritance:
-
-.. latex:clearpage::
-
 .. autoattrs:: libgunshotmatch.method.Method
 	:exclude-members: __repr__,__getstate__,__setstate__,__setattr__,__ne__,__delattr__,__attrs_init__,__eq__,__str__
 

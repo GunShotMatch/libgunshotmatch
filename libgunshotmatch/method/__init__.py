@@ -34,11 +34,12 @@ except ImportError:
 
 # stdlib
 import json
-from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Type, TypeVar, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Type, Union
 
 # 3rd party
 import attr
 import tomli_w
+from dom_toml.config import Config, subtable_field
 from dom_toml.config.fields import Boolean, Integer, Number, String
 
 # this package
@@ -51,7 +52,6 @@ from libgunshotmatch.method._fields import (
 from libgunshotmatch.utils import _fix_init_annotations, _to_list
 
 __all__ = (
-		"MethodBase",
 		"Method",
 		"IntensityMatrixMethod",
 		"PeakDetectionMethod",
@@ -61,50 +61,10 @@ __all__ = (
 		"SavitzkyGolayMethod",
 		)
 
-_MB = TypeVar("_MB", bound="MethodBase")
-
-
-class MethodBase:
-	"""
-	Base class for methods.
-	"""
-
-	@classmethod
-	def from_dict(cls: Type["MethodBase"], method: Mapping[str, Any]) -> "MethodBase":
-		"""
-		Construct a :class:`~.MethodBase` from a dictionary.
-
-		:param method:
-		"""
-
-		return cls(**method)
-
-	def to_dict(self) -> Dict[str, Any]:
-		"""
-		Convert a :class:`~.MethodBase` to a dictionary.
-		"""
-
-		return attr.asdict(self, recurse=True)  # type: ignore[arg-type]  # This is an ABC but not an attrs class.
-
-	@classmethod
-	def _coerce(cls: Type[_MB], method: Any) -> _MB:
-		if isinstance(method, cls):
-			return method
-		elif isinstance(method, Mapping):
-			return cls(**method)
-		else:
-
-			class_name = cls.__name__
-			if class_name.startswith("aeiouAEIOU"):
-				raise TypeError(f"Cannot convert {type(method).__name__} to an {class_name}")
-			# TODO: edge cases
-			else:
-				raise TypeError(f"Cannot convert {type(method).__name__} to a {class_name}")
-
 
 @_fix_init_annotations
 @attr.define
-class SavitzkyGolayMethod(MethodBase):
+class SavitzkyGolayMethod(Config):
 	"""
 	Method parameters for the Savitzky-Golay filter.
 
@@ -137,7 +97,7 @@ def _convert_sg_method(method: Union[bool, "SavitzkyGolayMethod", Dict[str, Any]
 
 @_fix_init_annotations
 @attr.define
-class IntensityMatrixMethod(MethodBase):
+class IntensityMatrixMethod(Config):
 	"""
 	Method used for constructing an intensity matrix from a datafile.
 	"""
@@ -161,7 +121,7 @@ class IntensityMatrixMethod(MethodBase):
 
 @_fix_init_annotations
 @attr.define
-class PeakDetectionMethod(MethodBase):
+class PeakDetectionMethod(Config):
 	"""
 	Method used for Biller-Biemann peak detection.
 	"""
@@ -175,7 +135,7 @@ class PeakDetectionMethod(MethodBase):
 
 @_fix_init_annotations
 @attr.define
-class PeakFilterMethod(MethodBase):
+class PeakFilterMethod(Config):
 	"""
 	Method used for peak filtering.
 	"""
@@ -200,7 +160,7 @@ class PeakFilterMethod(MethodBase):
 
 @_fix_init_annotations
 @attr.define
-class AlignmentMethod(MethodBase):
+class AlignmentMethod(Config):
 	"""
 	Method used for peak alignment.
 	"""
@@ -227,7 +187,7 @@ class AlignmentMethod(MethodBase):
 
 @_fix_init_annotations
 @attr.define
-class ConsolidateMethod(MethodBase):
+class ConsolidateMethod(Config):
 	"""
 	Method used for consolidation (finding most likely identity for aligned peaks).
 
@@ -267,14 +227,9 @@ class ConsolidateMethod(MethodBase):
 # target_range = 4.0,37.0
 
 
-def _submethod_field(submethod_type: Type[_MB]) -> _MB:
-	# Actually returns attr.Attribute, but mypy doesn't like it
-	return attr.field(factory=submethod_type, converter=submethod_type._coerce)
-
-
 @_fix_init_annotations
 @attr.define
-class Method(MethodBase):
+class Method(Config):
 	"""
 	Overall GunShotMatch method.
 
@@ -282,41 +237,19 @@ class Method(MethodBase):
 	"""
 
 	#: Method used for constructing an intensity matrix from a datafile.
-	intensity_matrix: IntensityMatrixMethod = _submethod_field(IntensityMatrixMethod)
+	intensity_matrix: IntensityMatrixMethod = subtable_field(IntensityMatrixMethod)
 
 	#: Method used for Biller-Biemann peak detection.
-	peak_detection: PeakDetectionMethod = _submethod_field(PeakDetectionMethod)
+	peak_detection: PeakDetectionMethod = subtable_field(PeakDetectionMethod)
 
 	#: Method used for peak filtering.
-	peak_filter: PeakFilterMethod = _submethod_field(PeakFilterMethod)
+	peak_filter: PeakFilterMethod = subtable_field(PeakFilterMethod)
 
 	#: Method used for peak alignment.
-	alignment: AlignmentMethod = _submethod_field(AlignmentMethod)
+	alignment: AlignmentMethod = subtable_field(AlignmentMethod)
 
 	#: Method used for consolidation (finding most likely identity for aligned peaks).
-	consolidate: ConsolidateMethod = _submethod_field(ConsolidateMethod)
-
-	@classmethod
-	def from_toml(cls: Type["Method"], toml_string: str) -> "Method":
-		"""
-		Parse a :class:`~.Method` from a TOML string.
-
-		:param toml_string:
-		"""
-
-		parsed_toml = tomllib.loads(toml_string)
-		return cls(**parsed_toml["method"])
-
-	@classmethod
-	def from_json(cls: Type["Method"], json_string: str) -> "Method":
-		"""
-		Parse a :class:`~.Method` from a JSON string.
-
-		:param json_string:
-		"""
-
-		parsed_json = json.loads(json_string)
-		return cls(**parsed_json["method"])
+	consolidate: ConsolidateMethod = subtable_field(ConsolidateMethod)
 
 	def to_toml(self) -> str:
 		"""

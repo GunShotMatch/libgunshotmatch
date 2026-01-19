@@ -4,6 +4,7 @@ from typing import Any, Dict, Type
 # 3rd party
 import pytest
 from coincidence.regressions import AdvancedDataRegressionFixture
+from dom_toml.config import Config
 
 # this package
 from libgunshotmatch.method import (
@@ -11,7 +12,6 @@ from libgunshotmatch.method import (
 		ConsolidateMethod,
 		IntensityMatrixMethod,
 		Method,
-		MethodBase,
 		PeakDetectionMethod,
 		PeakFilterMethod,
 		SavitzkyGolayMethod
@@ -30,7 +30,7 @@ from libgunshotmatch.method import (
 				pytest.param(Method, id="Method"),
 				],
 		)
-def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture, cls: Type[MethodBase]):
+def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture, cls: Type[Config]):
 	method = cls()
 	advanced_data_regression.check(method.to_dict())
 
@@ -88,7 +88,7 @@ def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture
 		)
 def test_partial_arguments(
 		advanced_data_regression: AdvancedDataRegressionFixture,
-		cls: Type[MethodBase],
+		cls: Type[Config],
 		kwargs: Dict[str, Any],
 		):
 	method = cls(**kwargs)

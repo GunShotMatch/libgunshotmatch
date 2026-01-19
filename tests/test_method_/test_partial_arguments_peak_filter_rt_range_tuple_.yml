@@ -1,6 +1,6 @@
-base_peak_filter:
-- 73
-- 147
+base_peak_filter: !!set
+  73: null
+  147: null
 noise_filter: true
 noise_threshold: 2
 rt_range:
