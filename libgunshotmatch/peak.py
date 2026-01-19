@@ -91,7 +91,7 @@ class QualifiedPeak(Peak):
 			minutes: bool = False,
 			outlier: bool = False,
 			hits: Optional[List[SearchResult]] = None,
-			peak_number: Optional[int] = None
+			peak_number: Optional[int] = None,
 			):
 
 		Peak.__init__(self, rt, ms, minutes, outlier)
@@ -114,8 +114,8 @@ class QualifiedPeak(Peak):
 		minutes: bool = False,
 		outlier: bool = False,
 		hits: Optional[List[SearchResult]] = None,
-		peak_number: Optional[int] = None
-		):
+		peak_number: Optional[int] = None,
+	):
 		# Overrides __new__ method which warns if the Peak is for an IC (not applicable here)
 
 		obj = object.__new__(cls)
@@ -212,7 +212,7 @@ class QualifiedPeak(Peak):
 				MassSpectrum(**d["mass_spectrum"]),
 				outlier=d["is_outlier"],
 				hits=hits,
-				peak_number=d["peak_number"]
+				peak_number=d["peak_number"],
 				)
 		peak_obj.bounds = d["bounds"]
 		peak_obj._UID = d["UID"]
@@ -640,6 +640,8 @@ def peak_from_dict(d: Dict[str, Any]) -> Peak:
 def _to_peak_list(a_list: List[Peak]) -> PeakList:
 	"""
 	Internal utility to coerce a list of peaks to an actual :class:`~.PeakList`.
+
+	:param a_list:
 	"""
 
 	if isinstance(a_list, PeakList):

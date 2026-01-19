@@ -60,7 +60,7 @@ def _row_ms_comparison(ms_data: Sequence[MassSpectrum], perms: PermsListType) ->
 	return similarity_list
 
 
-def _map_func(
+def _map_func(  # noqa: PRM002
 		peak_number: int,
 		ms_data: Sequence[MassSpectrum],
 		perms: PermsListType,

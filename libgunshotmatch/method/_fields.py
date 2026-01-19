@@ -41,7 +41,7 @@ __all__ = (
 		"String",
 		"convert_crop_mass_range",
 		"convert_rt_range",
-		"default_base_peak_filter"
+		"default_base_peak_filter",
 		)
 
 _FT = TypeVar("_FT")
@@ -68,7 +68,7 @@ class FieldType(Generic[_FT]):
 		return cls
 
 	@classmethod
-	def validator(cls: Type["FieldType"], inst: object, attr: attr.Attribute, value: Any) -> None:
+	def validator(cls: Type["FieldType"], inst: object, attr: attr.Attribute, value: Any) -> None:  # noqa: PRM002
 		"""
 		Check if a value conforms to this field's expected datatype.
 
@@ -83,6 +83,8 @@ class FieldType(Generic[_FT]):
 	def field(cls: Type["FieldType"], default: _FT) -> _FT:
 		"""
 		Construct an attrs field.
+
+		:param default:
 		"""
 		# Actually returns attr.Attribute, but mypy doesn't like it
 
@@ -129,7 +131,7 @@ class Number(FieldType):
 	field_name = "a number"
 
 	@classmethod
-	def validator(cls: Type["FieldType"], inst: object, attr: attr.Attribute, value: Any) -> None:
+	def validator(cls: Type["FieldType"], inst: object, attr: attr.Attribute, value: Any) -> None:  # noqa: PRM002
 		"""
 		Check if a value is a number.
 
@@ -144,6 +146,8 @@ class Number(FieldType):
 def convert_crop_mass_range(value: Optional[Iterable]) -> Optional[Tuple[int, int]]:
 	"""
 	Convert a value to a tuple of integers for the ``crop_mass_range`` option.
+
+	:param value:
 	"""
 
 	if not value:
@@ -168,6 +172,8 @@ def convert_sg_window(value: int) -> int: ...
 def convert_sg_window(value: Union[str, int]) -> Union[str, int]:
 	"""
 	Convert a Savitzky-Golay window size parameter value.
+
+	:param value:
 	"""
 
 	if isinstance(value, int):
@@ -183,6 +189,8 @@ def convert_sg_window(value: Union[str, int]) -> Union[str, int]:
 def convert_rt_range(value: Optional[Iterable]) -> Optional[Tuple[float, float]]:
 	"""
 	Convert a value to a tuple of floats for the ``rt_range`` option.
+
+	:param value:
 	"""
 
 	if not value:

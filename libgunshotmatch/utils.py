@@ -132,7 +132,7 @@ def _fix_init_annotations(method: Type[_AI]) -> Type[_AI]:
 	return method
 
 
-def _to_list(l: Iterable[str]) -> List[str]:
+def _to_list(l: Iterable[str]) -> List[str]:  # noqa: PRM002
 	"""
 	Attrs type hint helper for converting to a list.
 

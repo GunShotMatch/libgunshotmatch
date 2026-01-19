@@ -25,13 +25,13 @@ from libgunshotmatch.peak import PeakList, filter_peaks
 				"ELEY_3_SUBTRACT.JDX",
 				"ELEY_4_SUBTRACT.JDX",
 				"ELEY_5_SUBTRACT.JDX",
-				]
+				],
 		)
 def test_datafile_from_jdx(
 		filename: str,
 		advanced_file_regression: AdvancedFileRegressionFixture,
 		monkeypatch,
-		tmp_pathplus: PathPlus
+		tmp_pathplus: PathPlus,
 		):
 	monkeypatch.setenv("USERNAME", "test-user")
 
@@ -77,13 +77,14 @@ def test_datafile_from_jdx(
 
 
 @pytest.mark.parametrize(
-		"name", [
+		"name",
+		[
 				"ELEY_1_SUBTRACT",
 				"ELEY_2_SUBTRACT",
 				"ELEY_3_SUBTRACT",
 				"ELEY_4_SUBTRACT",
 				"ELEY_5_SUBTRACT",
-				]
+				],
 		)
 def test_load_datafile(name: str, advanced_file_regression: AdvancedFileRegressionFixture):
 	path = PathPlus(__file__).parent / f"{name}.gsmd"
@@ -108,7 +109,7 @@ def prepare_peak_list(datafile: Datafile, gcms_data: GCMS_data, method: Method) 
 					im,
 					points=method.peak_detection.points,
 					scans=method.peak_detection.scans,
-					)
+					),
 			)
 	print(" Peak list before filtering:", peak_list)
 
@@ -134,7 +135,7 @@ def test_peaks(advanced_data_regression: AdvancedDataRegressionFixture, monkeypa
 	monkeypatch.setenv("USERNAME", "test-user")
 
 	method = Method()
-	path = PathPlus(__file__).parent / f"ELEY_4_SUBTRACT.JDX"
+	path = PathPlus(__file__).parent / "ELEY_4_SUBTRACT.JDX"
 	datafile = Datafile.new(path.stem, path)
 	gcms_data: GCMS_data = datafile.load_gcms_data()
 	datafile.prepare_intensity_matrix(
@@ -151,13 +152,14 @@ def test_peaks(advanced_data_regression: AdvancedDataRegressionFixture, monkeypa
 
 
 @pytest.mark.parametrize(
-		"name", [
+		"name",
+		[
 				"ELEY_1_SUBTRACT",
 				"ELEY_2_SUBTRACT",
 				"ELEY_3_SUBTRACT",
 				"ELEY_4_SUBTRACT",
 				"ELEY_5_SUBTRACT",
-				]
+				],
 		)
 def test_create_repeat(name: str, tmp_pathplus: PathPlus):
 	path = PathPlus(__file__).parent / f"{name}.gsmd"

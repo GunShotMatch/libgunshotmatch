@@ -44,7 +44,7 @@ def filter_alignment_to_consolidate(unknown: Project) -> Alignment:
 	"""
 	Filter peaks from an unknown's ``alignment`` to only those which survived the ``consolidate`` process.
 
-	:param project:
+	:param unknown:
 	"""
 
 	assert unknown.consolidated_peaks is not None

@@ -12,7 +12,7 @@ from sphinx_toolbox.utils import is_namedtuple, singleton
 
 
 def preprocess_class_defaults(
-		obj: Callable
+		obj: Callable,
 		) -> Tuple[Optional[Callable], Optional[inspect.Signature], List[inspect.Parameter]]:
 	"""
 	Pre-processes the default values for the arguments of a class.
@@ -83,10 +83,16 @@ def process_signature(  # noqa: MAN001
 	if name not in {
 			"libgunshotmatch.datafile.Datafile",
 			"libgunshotmatch.datafile.Repeat",
-			"libgunshotmatch.method.Method"
+			"libgunshotmatch.method.Method",
 			}:
 		return sphinx_toolbox.more_autodoc.typehints.process_signature(
-				app, what, name, obj, options, signature, return_annotation
+				app,
+				what,
+				name,
+				obj,
+				options,
+				signature,
+				return_annotation,
 				)
 
 	if not callable(obj):
@@ -120,7 +126,8 @@ def process_signature(  # noqa: MAN001
 			and not _is_dataclass(name, what, obj.__qualname__)
 			):
 		sphinx_toolbox.more_autodoc.typehints.sat_logger.warning(
-				"Cannot treat a function defined as a local function: '%s'  (use @functools.wraps)", name
+				"Cannot treat a function defined as a local function: '%s'  (use @functools.wraps)",
+				name,
 				)
 		return None
 

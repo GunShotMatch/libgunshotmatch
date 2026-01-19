@@ -194,7 +194,7 @@ class PeakFilterMethod(MethodBase):
 	base_peak_filter: Set[int] = attr.field(
 			default=attr.Factory(default_base_peak_filter),
 			converter=set,
-			validator=attr.validators.instance_of(set)
+			validator=attr.validators.instance_of(set),
 			)
 
 	#: Optional retention time range (in minutes) to filter the peak list to.

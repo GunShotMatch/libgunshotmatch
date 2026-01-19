@@ -104,6 +104,8 @@ class Project:
 		"""
 		Export as a ``gsmp`` file.
 
+		:param output_dir:
+
 		:returns: The output filename.
 		"""
 

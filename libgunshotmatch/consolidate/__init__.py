@@ -280,7 +280,7 @@ class ConsolidatedPeak:
 			minutes: bool = False,
 			hits: Optional[List[ConsolidatedSearchResult]] = None,
 			ms_comparison: Union[Mapping[str, float], pandas.Series, None] = None,
-			meta: Optional[Dict[str, Any]] = None
+			meta: Optional[Dict[str, Any]] = None,
 			):
 
 		# TODO: Type check rt_list and ms_list
@@ -656,7 +656,7 @@ def match_counter(
 							rmf_list=rmf_data,
 							hit_numbers=hit_num_data,
 							reference_data=ref_data,
-							)
+							),
 					)
 
 		# Sort consolidated hit list
@@ -668,7 +668,7 @@ def match_counter(
 				ms_data,
 				hits=hits_data,
 				ms_comparison=ms_comp_data.loc[peak_no],
-				meta={"peak_number": idx}  # The position of the peaks in the QualifiedPeak lists
+				meta={"peak_number": idx},  # The position of the peaks in the QualifiedPeak lists
 				)
 
 		# consolidated_peak.hits = hits_data  # [:n_hits]

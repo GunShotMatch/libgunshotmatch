@@ -28,7 +28,7 @@ from libgunshotmatch.method import (
 				pytest.param(SavitzkyGolayMethod, id="SavitzkyGolayMethod"),
 				pytest.param(IntensityMatrixMethod, id="IntensityMatrixMethod"),
 				pytest.param(Method, id="Method"),
-				]
+				],
 		)
 def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture, cls: Type[MethodBase]):
 	method = cls()
@@ -46,13 +46,19 @@ def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture
 				pytest.param(SavitzkyGolayMethod, {"window": 8, "degree": 5}, id="savgol_window_degree"),
 				pytest.param(IntensityMatrixMethod, {"crop_mass_range": [100, 200]}, id="im_mass_range"),
 				pytest.param(
-						IntensityMatrixMethod, {"tophat_structure_size": "2m"}, id="im_tophat_structure_size"
+						IntensityMatrixMethod,
+						{"tophat_structure_size": "2m"},
+						id="im_tophat_structure_size",
 						),
 				pytest.param(
-						IntensityMatrixMethod, {"savitzky_golay": {"enable": False}}, id="im_savgol_dict_false"
+						IntensityMatrixMethod,
+						{"savitzky_golay": {"enable": False}},
+						id="im_savgol_dict_false",
 						),
 				pytest.param(
-						IntensityMatrixMethod, {"savitzky_golay": {"window": 10}}, id="im_savgol_dict_window"
+						IntensityMatrixMethod,
+						{"savitzky_golay": {"window": 10}},
+						id="im_savgol_dict_window",
 						),
 				pytest.param(IntensityMatrixMethod, {"savitzky_golay": False}, id="im_savgol_false"),
 				pytest.param(PeakDetectionMethod, {"points": 8}, id="peak_detection_points"),
@@ -60,12 +66,14 @@ def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture
 				pytest.param(PeakFilterMethod, {"noise_filter": False}, id="peak_filter_noise_filter"),
 				pytest.param(PeakFilterMethod, {"noise_threshold": 5}, id="peak_filter_noise_threshold"),
 				pytest.param(
-						PeakFilterMethod, {"base_peak_filter": [1, 2, 3, 4, 5]},
-						id="peak_filter_base_peak_filter_list"
+						PeakFilterMethod,
+						{"base_peak_filter": [1, 2, 3, 4, 5]},
+						id="peak_filter_base_peak_filter_list",
 						),
 				pytest.param(
-						PeakFilterMethod, {"base_peak_filter": {1, 2, 3, 4, 5}},
-						id="peak_filter_base_peak_filter_set"
+						PeakFilterMethod,
+						{"base_peak_filter": {1, 2, 3, 4, 5}},
+						id="peak_filter_base_peak_filter_set",
 						),
 				pytest.param(PeakFilterMethod, {"rt_range": [5, 10]}, id="peak_filter_rt_range_list"),
 				pytest.param(PeakFilterMethod, {"rt_range": (15, 20)}, id="peak_filter_rt_range_tuple"),
@@ -76,10 +84,12 @@ def test_default_methods(advanced_data_regression: AdvancedDataRegressionFixture
 				pytest.param(AlignmentMethod, {"min_peak_area": 1.5e6}, id="alignment_min_peak_area"),
 				# ConsolidateMethod
 				# Method
-				]
+				],
 		)
 def test_partial_arguments(
-		advanced_data_regression: AdvancedDataRegressionFixture, cls: Type[MethodBase], kwargs: Dict[str, Any]
+		advanced_data_regression: AdvancedDataRegressionFixture,
+		cls: Type[MethodBase],
+		kwargs: Dict[str, Any],
 		):
 	method = cls(**kwargs)
 	advanced_data_regression.check(method.to_dict())

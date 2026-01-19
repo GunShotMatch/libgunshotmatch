@@ -209,7 +209,7 @@ class Datafile:
 						'\n'.join([
 								"Cannot crop mass range when `max mass` is less than `min mass`.\n'",
 								"Did you put the numbers the wrong way around? The expected order is (<min>, <max>)",
-								])
+								]),
 						)
 
 			if intensity_matrix.min_mass is not None and min_mass < intensity_matrix.min_mass:
@@ -323,6 +323,8 @@ class Datafile:
 	def export(self, output_dir: PathLike) -> str:
 		"""
 		Export as a ``.gsmd`` file and return the output filename.
+
+		:param output_dir:
 		"""
 
 		export_filename = os.path.join(output_dir, f"{self.name}.gsmd")
@@ -371,6 +373,8 @@ class GCMSDataInfo(NamedTuple):
 def get_info_from_gcms_data(gcms_data: GCMS_data) -> GCMSDataInfo:
 	"""
 	Returns a information about the data in a :class:`pyms.GCMS.Class.GCMS_data` object.
+
+	:param gcms_data:
 	"""
 
 	# TODO: within pyms make read only properties for these private attributes
@@ -505,6 +509,8 @@ class Repeat:
 		Export as a ``.gsmr`` file and return the output filename.
 
 		.. versionadded:: 0.4.0
+
+		:param output_dir:
 		"""
 
 		export_filename = os.path.join(output_dir, f"{self.name}.gsmr")
