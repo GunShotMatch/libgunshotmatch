@@ -18,6 +18,7 @@
 
 .. autoenum:: libgunshotmatch.datafile.FileType
 
+.. latex:clearpage::
 .. autonamedtuple:: libgunshotmatch.datafile.GCMSDataInfo
 	:exclude-members: __repr__
 

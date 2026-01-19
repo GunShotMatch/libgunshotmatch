@@ -79,7 +79,8 @@ class Datafile:
 	"""
 	Represents a single datafile in a project.
 
-	:default user: taken from the currently logged-in user
+	:default user: taken from the currently logged-in us
+	:param original_filetype: The filetype of the file the :class:`~.Datafile` was created from.
 	:default device: taken from the current device's hostname
 	:default date_created: is the current date and time
 	:default date_modified: is the current date and time
@@ -89,10 +90,16 @@ class Datafile:
 	name: str
 	#: The filename of the file the :class:`~.Datafile` was created from.
 	original_filename: str
-	#: The filetype of the file the :class:`~.Datafile` was created from.
+
 	original_filetype: FileType = attr.field(
 			converter=FileType._attrs_convert,  # type: ignore[misc]  # doesn't like the converter
 			)
+	"""
+	The filetype of the file the :class:`~.Datafile` was created from.
+
+	.. latex:clearpage::
+	"""
+
 	#: A description of the :class:`~.Datafile`.
 	description: str = attr.field(default='')
 	#: PyMassSpec :class:`~pyms.IntensityMatrix.IntensityMatrix` object.
@@ -325,6 +332,10 @@ class Datafile:
 		Export as a ``.gsmd`` file and return the output filename.
 
 		:param output_dir:
+
+		:rtype:
+
+		.. latex:clearpage::
 		"""
 
 		export_filename = os.path.join(output_dir, f"{self.name}.gsmd")
@@ -527,6 +538,7 @@ class Repeat:
 		:rtype:
 
 		.. versionadded:: 0.4.0
+		.. latex:clearpage::
 		"""
 
 		as_dict: Dict[str, Any] = gzip_util.read_gzip_json(filename)  # type: ignore[assignment]

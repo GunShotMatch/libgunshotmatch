@@ -3,6 +3,8 @@
 #  project.py
 """
 Represents a collection of repeat analyses.
+
+.. latex:vspace:: -3mm
 """
 #
 #  Copyright © 2020-2023 Dominic Davis-Foster <dominic@davis-foster.co.uk>
@@ -57,6 +59,8 @@ __all__ = ("Project", "consolidate")
 class Project:
 	"""
 	A project represents the aligned peaks from multiple datafiles.
+
+	.. latex:vspace:: -5mm
 	"""
 
 	#: The name of the project.
