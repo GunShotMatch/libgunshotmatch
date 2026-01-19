@@ -39,13 +39,10 @@ from typing import Any, Dict, List, Mapping, Optional, Set, Tuple, Type, TypeVar
 # 3rd party
 import attr
 import tomli_w
+from dom_toml.config.fields import Boolean, Integer, Number, String
 
 # this package
 from libgunshotmatch.method._fields import (
-		Boolean,
-		Integer,
-		Number,
-		String,
 		convert_crop_mass_range,
 		convert_rt_range,
 		convert_sg_window,

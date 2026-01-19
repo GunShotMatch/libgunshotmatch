@@ -27,120 +27,14 @@ Internal attrs field helpers.
 #
 
 # stdlib
-from typing import Any, Generic, Iterable, Optional, Set, Tuple, Type, TypeVar, Union, overload
+from typing import Iterable, Optional, Set, Tuple, TypeVar, Union, overload
 
 # 3rd party
-import attr
 from pyms.Utils.Time import time_str_secs
 
-__all__ = (
-		"Boolean",
-		"FieldType",
-		"Integer",
-		"Number",
-		"String",
-		"convert_crop_mass_range",
-		"convert_rt_range",
-		"default_base_peak_filter",
-		)
+__all__ = ["convert_crop_mass_range", "convert_rt_range", "convert_sg_window", "default_base_peak_filter"]
 
 _FT = TypeVar("_FT")
-
-
-class FieldType(Generic[_FT]):
-	"""
-	Customisable method field type.
-	"""
-
-	#: The Python type of the object.
-	field_type: Type[_FT]
-
-	#: String name of the field.
-	field_name: str
-
-	def __new__(cls: Type["FieldType"]) -> Type["FieldType"]:  # type: ignore[misc]
-		"""
-		Make the ``FieldType`` class unitializable.
-
-		Mypy doesn't like it, hence the ``type: ignore``.
-		"""
-
-		return cls
-
-	@classmethod
-	def validator(cls: Type["FieldType"], inst: object, attr: attr.Attribute, value: Any) -> None:  # noqa: PRM002
-		"""
-		Check if a value conforms to this field's expected datatype.
-
-		This method is called by attrs.
-		"""
-
-		if not isinstance(value, cls.field_type):
-			err_msg = f"'{attr.name}' must be {cls.field_name} (got {value!r} that is a {value.__class__!r})."
-			raise TypeError(err_msg)
-
-	@classmethod
-	def field(cls: Type["FieldType"], default: _FT) -> _FT:
-		"""
-		Construct an attrs field.
-
-		:param default:
-		"""
-		# Actually returns attr.Attribute, but mypy doesn't like it
-
-		return attr.field(
-				default=default,
-				converter=cls.field_type,
-				validator=cls.validator,
-				)
-
-
-class Boolean(FieldType):
-	"""
-	Boolean method field type.
-	"""
-
-	field_type = bool
-	field_name = "boolean"
-
-
-class String(FieldType):
-	"""
-	String method field type.
-	"""
-
-	field_type = str
-	field_name = "a string"
-
-
-class Integer(FieldType):
-	"""
-	Integer method field type.
-	"""
-
-	field_type = int
-	field_name = "an integer"
-
-
-class Number(FieldType):
-	"""
-	Numerical method field type.
-	"""
-
-	field_type = float
-	field_name = "a number"
-
-	@classmethod
-	def validator(cls: Type["FieldType"], inst: object, attr: attr.Attribute, value: Any) -> None:  # noqa: PRM002
-		"""
-		Check if a value is a number.
-
-		This method is called by attrs.
-		"""
-
-		if not isinstance(value, (int, float)):
-			err_msg = f"'{attr.name}' must be {cls.field_name} (got {value!r} that is a {value.__class__!r})."
-			raise TypeError(err_msg)
 
 
 def convert_crop_mass_range(value: Optional[Iterable]) -> Optional[Tuple[int, int]]:

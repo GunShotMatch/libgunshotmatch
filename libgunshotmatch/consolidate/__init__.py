@@ -38,6 +38,7 @@ import attr
 import numpy
 import pandas  # type: ignore[import-untyped]
 import pyms_nist_search
+from dom_toml.config.fields import Integer
 from pyms.DPA.Alignment import Alignment
 from pyms.Spectrum import MassSpectrum
 from pyms_nist_search import ReferenceData, SearchResult
@@ -51,7 +52,6 @@ from libgunshotmatch.consolidate._fields import (
 		)
 from libgunshotmatch.consolidate._spectra import PermsListType, _map_func
 from libgunshotmatch.method import ConsolidateMethod
-from libgunshotmatch.method._fields import Integer
 from libgunshotmatch.peak import QualifiedPeak
 from libgunshotmatch.utils import _fix_init_annotations, _to_list
 
