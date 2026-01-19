@@ -1,0 +1,15 @@
+cas: 0-0-0
+hit_numbers:
+- 7
+- 8
+- 9
+mf_list:
+- 1
+- 2
+- 3
+name: foo-bar
+reference_data: null
+rmf_list:
+- 4
+- 5
+- 6

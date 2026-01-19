@@ -12,12 +12,15 @@ from pytest_regressions.dataframe_regression import DataFrameRegressionFixture
 
 # this package
 from libgunshotmatch.consolidate import (
+		ConsolidatedPeak,
 		ConsolidatedPeakFilter,
+		ConsolidatedSearchResult,
 		InvertedFilter,
 		combine_spectra,
 		pairwise_ms_comparisons
 		)
 from libgunshotmatch.consolidate._fields import _attrs_convert_reference_data
+from libgunshotmatch.method import ConsolidateMethod
 from libgunshotmatch.project import Project
 
 # Test consolidate process from gsmp file
@@ -201,3 +204,65 @@ def test_combine_spectra(advanced_data_regression: AdvancedDataRegressionFixture
 	for peak in project.consolidated_peaks:
 		spectra.append(combine_spectra(peak))
 	advanced_data_regression.check(spectra)
+
+
+def test_consolidated_search_result_repr():
+	result = ConsolidatedSearchResult(
+			name="foo-bar",
+			cas="0-0-0",
+			mf_list=[1, 2, 3],
+			rmf_list=[4, 5, 6],
+			hit_numbers=[7, 8, 9],
+			)
+	assert repr(result) == "<Consolidated Search Result: foo-bar \tmf=2.0\tn=3>"
+	assert str(result) == "<Consolidated Search Result: foo-bar \tmf=2.0\tn=3>"
+
+
+def test_consolidated_search_result_to_dict(advanced_data_regression: AdvancedDataRegressionFixture):
+	result = ConsolidatedSearchResult(
+			name="foo-bar",
+			cas="0-0-0",
+			mf_list=[1, 2, 3],
+			rmf_list=[4, 5, 6],
+			hit_numbers=[7, 8, 9],
+			)
+	advanced_data_regression.check(result.to_dict())
+
+
+def test_consolidated_peak_misc_constructor():
+	peak = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[], hits=None)
+	assert len(peak.hits) == 0
+	peak.hits = None
+	assert len(peak.hits) == 0
+
+	with pytest.raises(TypeError, match="'hits' must be a list of ConsolidatedSearchResult objects"):
+		ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[], hits=["abc", 123])
+
+	peak = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[], minutes=True)
+	assert peak.rt_list == [60.0, 120.0, 180.0]
+
+	assert peak.average_ms_comparison == 0
+	assert peak.ms_comparison_stdev == 0
+
+
+def test_consolidated_peak_repr():
+	result = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[])
+	assert repr(result) == "<Consolidated Peak: 2.0>"
+	assert str(result) == "<Consolidated Peak: 2.0>"
+
+
+@pytest.mark.xfail(reason="The truth value of a Series is ambiguous. Override attrs __eq__ to fix.")  # TODO
+def test_consolidated_peak_dict():
+	result = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[None, None, None])
+	assert result.to_dict() == dict(result)
+
+	assert ConsolidatedPeak.from_dict(result.to_dict()) == result
+
+
+def test_consolidated_peak_filter_from_method():
+	method = ConsolidateMethod()
+	peak_filter = ConsolidatedPeakFilter.from_method(method)
+	assert peak_filter.name_filter == []
+	assert peak_filter.min_match_factor == 600
+	assert peak_filter.min_appearances == -1
+	assert peak_filter.verbose == False

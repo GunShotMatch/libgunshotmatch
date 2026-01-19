@@ -12,7 +12,7 @@ from pyms.GCMS.Class import GCMS_data
 from pyms.Peak.Function import peak_sum_area
 
 # this package
-from libgunshotmatch.datafile import Datafile, Repeat
+from libgunshotmatch.datafile import Datafile, FileType, Repeat
 from libgunshotmatch.method import Method
 from libgunshotmatch.peak import PeakList, filter_peaks
 
@@ -180,3 +180,8 @@ def test_create_repeat(name: str, tmp_pathplus: PathPlus):
 	assert (tmp_pathplus / (datafile.name + ".gsmr")).is_file()
 	Repeat.from_file(tmp_pathplus / (datafile.name + ".gsmr"))
 	assert repeat.peaks.datafile_name is not None
+
+
+def test_bad_filetype():
+	with pytest.raises(ValueError, match="Unrecognised file format 42"):
+		FileType._attrs_convert(42)

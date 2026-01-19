@@ -52,7 +52,8 @@ def _get_padded_peak_list(project: project.Project, rts: List[float]) -> _Padded
 				padded_cp_list.append(None)
 				if rts:
 					top_rt = rts.pop(0)
-				else:
+				else:  # pragma: no cover
+					# We've run out of retention times
 					break
 		padded_cp_list.append(cp)
 
