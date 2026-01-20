@@ -26,15 +26,8 @@ Methods for GunShotMatch analysis.
 #  OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-try:
-	# stdlib
-	import tomllib  # type: ignore[import-not-found]
-except ImportError:
-	import tomli as tomllib
-
 # stdlib
-import json
-from typing import Any, Dict, List, Optional, Set, Tuple, Type, Union
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 # 3rd party
 import attr
