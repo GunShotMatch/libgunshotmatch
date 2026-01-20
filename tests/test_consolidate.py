@@ -232,11 +232,32 @@ def test_consolidated_search_result_to_dict(advanced_data_regression: AdvancedDa
 def test_consolidated_peak_misc_constructor():
 	peak = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[], hits=None)
 	assert len(peak.hits) == 0
-	peak.hits = None
+	peak.hits = None  # type: ignore[assignment]
 	assert len(peak.hits) == 0
 
 	with pytest.raises(TypeError, match="'hits' must be a list of ConsolidatedSearchResult objects"):
-		ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[], hits=["abc", 123])
+		ConsolidatedPeak(
+				rt_list=[1.0, 2.0, 3.0],
+				area_list=[4.0, 5.0, 6.0],
+				ms_list=[],
+				hits=["abc", 123],  # type: ignore[list-item]
+				)
+
+	with pytest.raises(TypeError, match="'hits' must be a list of ConsolidatedSearchResult objects"):
+		peak.hits = [1]
+
+	assert len(peak.hits) == 0
+
+	peak.hits = [
+			ConsolidatedSearchResult(
+					name="foo-bar",
+					cas="0-0-0",
+					mf_list=[1, 2, 3],
+					rmf_list=[4, 5, 6],
+					hit_numbers=[7, 8, 9],
+					),
+			]
+	assert len(peak.hits) == 1
 
 	peak = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[], minutes=True)
 	assert peak.rt_list == [60.0, 120.0, 180.0]
@@ -265,4 +286,4 @@ def test_consolidated_peak_filter_from_method():
 	assert peak_filter.name_filter == []
 	assert peak_filter.min_match_factor == 600
 	assert peak_filter.min_appearances == -1
-	assert peak_filter.verbose == False
+	assert peak_filter.verbose is False
