@@ -244,7 +244,7 @@ def test_consolidated_peak_misc_constructor():
 				)
 
 	with pytest.raises(TypeError, match="'hits' must be a list of ConsolidatedSearchResult objects"):
-		peak.hits = [1]
+		peak.hits = [1]  # type: ignore[list-item]
 
 	assert len(peak.hits) == 0
 
