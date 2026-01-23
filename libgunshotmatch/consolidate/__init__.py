@@ -422,23 +422,24 @@ class ConsolidatedPeak:
 	def __str__(self) -> str:
 		return self.__repr__()
 
-	# def __eq__(self, other):
-	# 	"""
-	# 	Return whether this ConsolidatedPeak object is equal to another object
+	def __eq__(self, other: Any) -> bool:
+		"""
+		Return whether this ConsolidatedPeak object is equal to another object
 
-	# 	:param other: The other object to test equality with
-	# 	:type other: object
+		:param other: The other object to test equality with.
+		"""
 
-	# 	:rtype: bool
-	# 	"""
-
-	# 	if isinstance(other, self.__class__):
-	# 		if self.rt_list == other.rt_list and self.area_list == other.area_list:
-	# 			return self._ms_list == other._ms_list
-	# 		#: TODO: compare hits, meta and ms_comparison
-	# 		return False
-	# 	else:
-	# 		return NotImplemented
+		if isinstance(other, self.__class__):
+			return all([
+					self.rt_list == other.rt_list,
+					self.area_list == other.area_list,
+					self.ms_list == other.ms_list,
+					self.hits == other.hits,
+					self.ms_comparison.equals(other.ms_comparison),
+					self.meta == other.meta,
+					])
+		else:
+			return NotImplemented
 
 	def to_dict(self) -> Dict[str, Any]:
 		"""

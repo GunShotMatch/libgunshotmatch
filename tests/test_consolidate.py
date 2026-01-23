@@ -272,7 +272,6 @@ def test_consolidated_peak_repr():
 	assert str(result) == "<Consolidated Peak: 2.0>"
 
 
-@pytest.mark.xfail(reason="The truth value of a Series is ambiguous. Override attrs __eq__ to fix.")  # TODO
 def test_consolidated_peak_dict():
 	result = ConsolidatedPeak(rt_list=[1.0, 2.0, 3.0], area_list=[4.0, 5.0, 6.0], ms_list=[None, None, None])
 	assert result.to_dict() == dict(result)
