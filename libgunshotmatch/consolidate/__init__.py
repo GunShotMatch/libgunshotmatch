@@ -424,7 +424,7 @@ class ConsolidatedPeak:
 
 	def __eq__(self, other: Any) -> bool:
 		"""
-		Return whether this ConsolidatedPeak object is equal to another object
+		Return whether this ConsolidatedPeak object is equal to another object.
 
 		:param other: The other object to test equality with.
 		"""
