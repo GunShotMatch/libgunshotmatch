@@ -31,7 +31,20 @@ from collections import Counter, defaultdict
 from fnmatch import fnmatch
 from itertools import permutations
 from multiprocessing import Pool
-from typing import Any, Dict, Iterator, List, Mapping, MutableSequence, Optional, Tuple, Type, Union, cast
+from typing import (
+		TYPE_CHECKING,
+		Any,
+		Dict,
+		Iterator,
+		List,
+		Mapping,
+		MutableSequence,
+		Optional,
+		Tuple,
+		Type,
+		Union,
+		cast
+		)
 
 # 3rd party
 import attr
@@ -55,9 +68,14 @@ from libgunshotmatch.method import ConsolidateMethod
 from libgunshotmatch.peak import QualifiedPeak
 from libgunshotmatch.utils import _fix_init_annotations, _to_list
 
+if TYPE_CHECKING:
+	# this package
+	from libgunshotmatch.project import Project
+
 __all__ = (
 		"ConsolidatedPeak",
 		"ConsolidatedSearchResult",
+		"max_peak_area",
 		"match_counter",
 		"pairwise_ms_comparisons",
 		"ConsolidatedPeakFilter",
@@ -497,6 +515,46 @@ class ConsolidatedPeak:
 				ms_comparison=d["ms_comparison"],
 				hits=hits,
 				)
+
+	@property
+	def median_area(self) -> float:
+		"""
+		The median peak area across the aligned peaks.
+
+		:rtype:
+
+		.. versionadded:: $NEXT
+		"""
+
+		return numpy.nanmedian(self.area_list)  # type: ignore[return-value]  # mypy thinks type is "floating[Any]"
+
+	@property
+	def area_quartiles(self) -> Tuple[float, float]:
+		"""
+		The 25th and 75th percentiles of the peak area across the aligned peaks.
+
+		:rtype:
+
+		.. versionadded:: $NEXT
+		"""
+
+		areas = self.area_list
+		return (numpy.nanpercentile(areas, 25), numpy.nanpercentile(areas, 75))  # type: ignore[return-value]
+
+
+def max_peak_area(project: "Project") -> float:
+	"""
+	Returns the maximum peak area across the consolidated peaks in the project.
+
+	:param project:
+
+	:rtype:
+
+	.. versionadded:: $NEXT
+	"""
+
+	assert project.consolidated_peaks is not None
+	return max(cp.area for cp in project.consolidated_peaks)
 
 
 def pairwise_ms_comparisons(alignment: Alignment, parallel: bool = True) -> pandas.DataFrame:
